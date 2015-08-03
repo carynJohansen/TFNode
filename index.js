@@ -2,9 +2,9 @@
 var sqlite3 = require('sqlite3').verbose()
 var db = new sqlite3.Database('/tmp/michael.db')
 
-db.serialize(function() {
-	console.log("This is the serialize statement.")
-})
+//db.serialize(function() {
+//	console.log("This is the serialize statement.")
+//})
 
 //begin express app
 var express = require('express')
@@ -31,6 +31,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
 //})
 
 app.get('/', function (request, response) {
+	//response.render('views/index', {title: 'Hey', message : 'Hi!'})
     response.sendFile(__dirname + '/static/query.html')
 })
 
@@ -41,26 +42,16 @@ app.post('/query', function (request, response, next) {
 		FROM gene_model as gm, interaction_network as inter \
 		WHERE gm.gene_locus=? AND inter.regulator=gm.id"
 
-	console.log("Query is: " + reqGL)
-	counter = 1
-	db.get(sql_query, reqGL, function(err, row) {
-		if (err) {
-			console.err(err)
-		}
-		else {
-			response.json({"gm_locus" : row.gene_locus, "regulator" : row.regulator, "target" : row.target, "Count" : counter})
-			//console.log("gm_locus: " + row.gene_locus + "\nRegulator: " + row.regulator + "\nTarget: " + row.target + "\nCounter: " + counter + "\n")
-			counter = counter + 1
-		}
-//		db.get("SELECT gm.gene_locus, inter.regulator, inter.target \
-//			FROM gene_model as gm, interaction_network as inter \
-//			WHERE gm.gene_locus=? AND inter.regulator=?", [gene_locus, gene_locus], function(err, row) {
-//				if (err) {
-//					console.err(err)
-//				} else{
-//					response.json({"gm_locus" : row.gene_locus, "regulator" : row.regulator, "target" : row.target})
-//				}
-//			})
+		console.log("Query is: " + reqGL)
+		counter = 1
+		db.all(sql_query, reqGL, function(err, rows) {
+			if (err) {
+				console.err(err)
+			} // close if
+			else {
+				//response.json({"gm_locus" : row.gene_locus, "regulator" : row.regulator, "target" : row.target, "Count" : counter})
+				response.end(JSON.stringify(rows)) //this returns an array of JSON objects
+			} //close else
 		}) //close db.all/get
 	}) // close db.serialize
 }) //close app.post
