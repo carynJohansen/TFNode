@@ -44,7 +44,7 @@ app.get('/', function (request, response) {
 app.post('/query', function (request, response, next) {
 
 	function showRegulator(result) {
-		response.end(result)
+		response.end(JSON.stringify(result))
 	} //close showRegulator
 
 	function queryByRegulator(whenDone) {
@@ -56,11 +56,11 @@ app.post('/query', function (request, response, next) {
 			WHERE gm.gene_locus=? AND inter.regulator=gm.id"
 			console.log("Query is: " + reqGL)
 
-			db.get(sql_query, reqGL, function(err, row) {
+			db.all(sql_query, reqGL, function(err, rows) {
 				if (err) {
 					console.log(err)
 				} else {
-					whenDone(row)
+					whenDone(rows)
 				} //close ifelse
 			}) //close db.all
 		}) // close serialize
