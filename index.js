@@ -43,13 +43,12 @@ app.post('/query', function (request, response, next) {
 
 	console.log("Query is: " + reqGL)
 	counter = 1
-	db.get(sql_query, reqGL, function(err, row) {
+	db.all(sql_query, reqGL, function(err, rows) {
 		if (err) {
 			console.err(err)
 		}
 		else {
-			response.json({"gm_locus" : row.gene_locus, "regulator" : row.regulator, "target" : row.target, "Count" : counter})
-			//console.log("gm_locus: " + row.gene_locus + "\nRegulator: " + row.regulator + "\nTarget: " + row.target + "\nCounter: " + counter + "\n")
+			response.end(JSON.stringify(rows)) //this returns an array of JSON objects
 			counter = counter + 1
 		}
 //		db.get("SELECT gm.gene_locus, inter.regulator, inter.target \
