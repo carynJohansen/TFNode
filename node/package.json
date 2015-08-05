@@ -22,7 +22,10 @@
   },
   "homepage": "https://github.com/mirrormere/TFNode#readme",
   "dependencies": {
+    "body-parser": "^1.13.3",
     "express": "^4.13.1",
+    "fs": "0.0.2",
+    "http": "0.0.0",
     "jade": "^1.11.0",
     "sqlite3": "3.0.9"
   }

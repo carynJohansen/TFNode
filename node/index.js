@@ -1,11 +1,12 @@
 //environment
 var express = require('express')
 var app = express()
-var stylus = require('stylus')
+ stylus = require('stylus')
 var http = require('http')
 var path = require('path')
 var bodyParser = require('body-parser')
 var fs = require('fs')
+var jade = require('jade')
 
 //Database connection
 var sqlite3 = require('sqlite3').verbose()
@@ -16,7 +17,7 @@ app.set('views', __dirname, + '/views')
 app.set('view engine', 'jade')
 
 //app.use(express.logger('dev'))
-app.use('/static', express.static(__dirname))
+//app.use(express.static(__dirname + '/static'))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 
@@ -30,29 +31,41 @@ app.use(bodyParser.urlencoded({ extended: false }))
 
 
 app.get('/', function (request, response) {
+	var maintainer = {
+		name: 'Person Person',
+		twitter: '@PersonPerson',
+		blog: 'personperson.com'
+	}
+	//response.render('static/jadeTemplate', maintainer)
 	//response.render('views/index', {title: 'Hey', message : 'Hi!'})
     response.sendFile(__dirname + '/static/query.html')
 })
 
 app.post('/query', function (request, response, next) {
-	db.serialize( function() {
-		var reqGL = request.body.gene_locus,
-		sql_query = "SELECT gm.id as gmID, gm.gene_locus, inter.regulator, inter.target \
-		FROM gene_model as gm, interaction_network as inter \
-		WHERE gm.gene_locus=? AND inter.regulator=gm.id"
 
-		console.log("Query is: " + reqGL)
-		counter = 1
-		db.all(sql_query, reqGL, function(err, rows) {
-			if (err) {
-				console.err(err)
-			} // close if
-			else {
-				//response.json({"gm_locus" : row.gene_locus, "regulator" : row.regulator, "target" : row.target, "Count" : counter})
-				response.end(JSON.stringify(rows)) //this returns an array of JSON objects
-			} //close else
-		}) //close db.all/get
-	}) // close db.serialize
+	function showRegulator(result) {
+		response.end(result)
+	} //close showRegulator
+
+	function queryByRegulator(whenDone) {
+		db.serialize( function() {
+
+			var reqGL = request.body.gene_locus
+			var sql_query = "SELECT gm.id as gmID, gm.gene_locus, inter.regulator, inter.target \
+			FROM gene_model as gm, interaction_network as inter \
+			WHERE gm.gene_locus=? AND inter.regulator=gm.id"
+			console.log("Query is: " + reqGL)
+
+			db.get(sql_query, reqGL, function(err, row) {
+				if (err) {
+					console.log(err)
+				} else {
+					whenDone(row)
+				} //close ifelse
+			}) //close db.all
+		}) // close serialize
+	} // close queryByRegulator
+	queryByRegulator(showRegulator)
 }) //close app.post
 
 var template = 'Node app is running at localhost: {port~number}'
