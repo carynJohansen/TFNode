@@ -13,7 +13,7 @@ var sqlite3 = require('sqlite3').verbose()
 var db = new sqlite3.Database('/tmp/michael.db')
 
 app.set('port', (process.env.PORT || 5000))
-app.set('views', __dirname, + '/views')
+app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'jade')
 
 //app.use(express.logger('dev'))
@@ -43,8 +43,9 @@ app.get('/', function (request, response) {
 
 app.post('/query', function (request, response, next) {
 
-	function showRegulator(result) {
-		response.end(JSON.stringify(result))
+	function showRegulator(results) {
+		console.log(JSON.stringify(results))
+		response.render('result', { data : results})
 	} //close showRegulator
 
 	function queryByRegulator(whenDone) {
@@ -60,6 +61,7 @@ app.post('/query', function (request, response, next) {
 				if (err) {
 					console.log(err)
 				} else {
+					//console.log(rows)
 					whenDone(rows)
 				} //close ifelse
 			}) //close db.all

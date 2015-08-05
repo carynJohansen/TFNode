@@ -1,0 +1,13 @@
+html
+  head 
+    title Test3
+    link(rel='stylesheet', href='/style.css')
+  body
+    div
+      table
+        each result in data.results
+          tr
+            td #{result.gmID}
+            td #{result.gene_locus}
+            td #{result.regulator}
+            td #{result.target}
