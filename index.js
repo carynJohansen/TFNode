@@ -36,7 +36,7 @@ app.get('/', function (request, response) {
 	}
 	//response.render('static/jadeTemplate', maintainer)
 	//response.render('views/index', {title: 'Hey', message : 'Hi!'})
-    response.sendFile(__dirname + '/static/query.html')
+    response.sendFile(__dirname + '/views/query.html')
 })
 
 app.post('/query', function (request, response, next) {
