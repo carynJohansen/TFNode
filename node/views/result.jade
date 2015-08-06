@@ -3,11 +3,16 @@ html
     title Test3
     link(rel='stylesheet', href='/style.css')
   body
-    div
-      table
-        each result in data.results
-          tr
-            td #{result.gmID}
-            td #{result.gene_locus}
-            td #{result.regulator}
-            td #{result.target}
+    div HEY!!
+    p !{data}
+    div why are these different?
+    p !{data.target}
+    p !{data.gmID}
+    div Why does this table look like shit?
+    table
+      each result in data
+        tr
+          td #{result.gmID}
+          td #{result.gene_locus}
+          td #{result.regulator}
+          td #{result.target}

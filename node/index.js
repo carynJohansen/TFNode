@@ -28,8 +28,6 @@ app.use(bodyParser.urlencoded({ extended: false }))
 //	next(err)
 //})
 
-
-
 app.get('/', function (request, response) {
 	var maintainer = {
 		name: 'Person Person',
@@ -44,8 +42,9 @@ app.get('/', function (request, response) {
 app.post('/query', function (request, response, next) {
 
 	function showRegulator(results) {
-		console.log(JSON.stringify(results))
-		response.render('result', { data : results})
+		console.log("In showRegulator")
+		//response.end(JSON.stringify(results))
+		response.render('result', { data : results })
 	} //close showRegulator
 
 	function queryByRegulator(whenDone) {
@@ -61,8 +60,8 @@ app.post('/query', function (request, response, next) {
 				if (err) {
 					console.log(err)
 				} else {
-					//console.log(rows)
 					whenDone(rows)
+					console.log("after whenDone callback")
 				} //close ifelse
 			}) //close db.all
 		}) // close serialize
