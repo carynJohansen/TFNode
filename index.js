@@ -29,26 +29,17 @@ app.use(bodyParser.urlencoded({ extended: false }))
 //})
 
 app.get('/', function (request, response) {
-	var maintainer = {
-		name: 'Person Person',
-		twitter: '@PersonPerson',
-		blog: 'personperson.com'
-	}
-	//response.render('static/jadeTemplate', maintainer)
-	//response.render('views/index', {title: 'Hey', message : 'Hi!'})
     response.sendFile(__dirname + '/views/query.html')
 })
 
 app.post('/query', function (request, response, next) {
 	function showRegulator(results) {
-		console.log("In showRegulator")
-		//response.end(JSON.stringify(results))
 		response.render('result', { data : results })
 	} //close showRegulator
 
 	function queryByRegulator(whenDone) {
+		
 		db.serialize( function() {
-
 			var reqGL = request.body.gene_locus
 			var sql_query = "SELECT gm.id as gmID, gm.gene_locus, inter.regulator, inter.target \
 			FROM gene_model as gm, interaction_network as inter \
