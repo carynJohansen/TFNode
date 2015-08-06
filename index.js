@@ -40,30 +40,6 @@ app.get('/', function (request, response) {
 })
 
 app.post('/query', function (request, response, next) {
-
-<<<<<<< HEAD
-	console.log("Query is: " + reqGL)
-	counter = 1
-	db.all(sql_query, reqGL, function(err, rows) {
-		if (err) {
-			console.err(err)
-		}
-		else {
-			response.end(JSON.stringify(rows)) //this returns an array of JSON objects
-			counter = counter + 1
-		}
-//		db.get("SELECT gm.gene_locus, inter.regulator, inter.target \
-//			FROM gene_model as gm, interaction_network as inter \
-//			WHERE gm.gene_locus=? AND inter.regulator=?", [gene_locus, gene_locus], function(err, row) {
-//				if (err) {
-//					console.err(err)
-//				} else{
-//					response.json({"gm_locus" : row.gene_locus, "regulator" : row.regulator, "target" : row.target})
-//				}
-//			})
-		}) //close db.all/get
-	}) // close db.serialize
-=======
 	function showRegulator(results) {
 		console.log("In showRegulator")
 		//response.end(JSON.stringify(results))
@@ -90,7 +66,6 @@ app.post('/query', function (request, response, next) {
 		}) // close serialize
 	} // close queryByRegulator
 	queryByRegulator(showRegulator)
->>>>>>> callbacks
 }) //close app.post
 
 var template = 'Node app is running at localhost: {port~number}'
