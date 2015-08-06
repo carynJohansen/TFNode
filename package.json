@@ -24,9 +24,16 @@
   "dependencies": {
     "body-parser": "^1.13.3",
     "express": "^4.13.1",
+<<<<<<< HEAD
     "jade": "^1.11.0",
     "path": "^0.11.14",
     "sqlite3": "^3.0.9",
     "stylus": "^0.52.0"
+=======
+    "fs": "0.0.2",
+    "http": "0.0.0",
+    "jade": "^1.11.0",
+    "sqlite3": "3.0.9"
+>>>>>>> callbacks
   }
 }
