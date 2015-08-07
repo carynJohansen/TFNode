@@ -51,7 +51,6 @@ app.post('/query', function (request, response, next) {
 					console.log(err)
 				} else {
 					whenDone(rows)
-					console.log("after whenDone callback")
 				} //close ifelse
 			}) //close db.all
 		}) // close serialize
