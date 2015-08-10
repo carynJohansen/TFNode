@@ -1,0 +1,13 @@
+h1 {
+	font-family: Georgia, "Times New Roman";
+	color: black;
+}
+table {
+	border:1px solid #999;
+	background-color: white;
+	border-collapse: collapse;
+}
+td, th {
+	border: 1px solid #999;
+	padding: 0.5rem;
+}

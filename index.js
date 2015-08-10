@@ -1,7 +1,7 @@
 //environment
 var express = require('express')
 var app = express()
- stylus = require('stylus')
+var stylus = require('stylus')
 var http = require('http')
 var path = require('path')
 var bodyParser = require('body-parser')
@@ -17,7 +17,7 @@ app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'jade')
 
 //app.use(express.logger('dev'))
-//app.use(express.static(__dirname + '/static'))
+app.use(express.static(__dirname + '/static'))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 
@@ -33,24 +33,29 @@ app.get('/', function (request, response) {
 })
 
 app.post('/query', function (request, response, next) {
-	function showRegulator(results) {
-		response.render('result', { data : results })
+	function showRegulator(results, gene) {
+		//here, gene is a string and results is an array of JSON objects (it itself is an object)
+		response.render('result', { gene: gene, data : results })
 	} //close showRegulator
 
 	function queryByRegulator(whenDone) {
 		
 		db.serialize( function() {
 			var reqGL = request.body.gene_locus
-			var sql_query = "SELECT gm.id as gmID, gm.gene_locus, inter.regulator, inter.target \
-			FROM gene_model as gm, interaction_network as inter \
-			WHERE gm.gene_locus=? AND inter.regulator=gm.id"
+			var sql_query = "SELECT gm2.gene_locus as target_locus, \
+			inter.int_id as interaction_id, \
+			gm2.id as gmID, inter.target as target_id \
+			FROM interaction_network as inter \
+			INNER JOIN gene_model as gm1 ON (inter.regulator = gm1.id) \
+			INNER JOIN gene_model as gm2 ON (inter.target=gm2.id) \
+			WHERE (gm1.gene_locus=?)"
 			console.log("Query is: " + reqGL)
 
 			db.all(sql_query, reqGL, function(err, rows) {
 				if (err) {
 					console.log(err)
 				} else {
-					whenDone(rows)
+					whenDone(rows, reqGL)
 				} //close ifelse
 			}) //close db.all
 		}) // close serialize
