@@ -39,8 +39,8 @@ app.post('/query', function (request, response, next) {
 	} //close showRegulator
 
 	function queryByRegulator(whenDone) {
+		
 		db.serialize( function() {
-
 			var reqGL = request.body.gene_locus
 			var sql_query = "SELECT gm2.gene_locus as target_locus, \
 			inter.int_id as interaction_id, \
