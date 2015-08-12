@@ -7,6 +7,7 @@ var path = require('path')
 var bodyParser = require('body-parser')
 var fs = require('fs')
 var jade = require('jade')
+var Glob = require('glob')
 
 //Database connection
 var sqlite3 = require('sqlite3').verbose()
@@ -35,7 +36,9 @@ app.get('/', function (request, response) {
 app.post('/query', function (request, response, next) {
 	function showRegulator(results, gene) {
 		//here, gene is a string and results is an array of JSON objects (it itself is an object)
-		response.render('result', { gene: gene, data : results })
+		var images = geneImages()
+		console.log("this is images: " + images)
+		response.render('result', { gene: gene, data : results, plots : images })
 	} //close showRegulator
 
 	function queryByRegulator(whenDone) {
@@ -60,6 +63,23 @@ app.post('/query', function (request, response, next) {
 			}) //close db.all
 		}) // close serialize
 	} // close queryByRegulator
+
+	function geneImages() {
+		//return an array of files associated with the searched for gene
+		gpattern = request.body.gene_locus
+		console.log("In geneImages(). here's the gene: " + gpattern)
+		var ts = new Glob("/static/images/[reqGL]", function(err, files) { 
+			if (err) {
+				console.log(err)
+			} else {
+				console.log("files: " + files)
+			}
+		}) //close glob
+		console.log("after")
+	}//close geneImages
+
+	var im = geneImages()
+	console.log("var image : " + im)
 	queryByRegulator(showRegulator)
 }) //close app.post
 
