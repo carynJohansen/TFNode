@@ -68,7 +68,7 @@ app.post('/query', function (request, response, next) {
 		//return an array of files associated with the searched for gene
 		gpattern = request.body.gene_locus
 		console.log("In geneImages(). here's the gene: " + gpattern)
-		var ts = new Glob("/static/images/[reqGL]", function(err, files) { 
+		Glob("/static/images/[reqGL]", function(err, files) { 
 			if (err) {
 				console.log(err)
 			} else {
