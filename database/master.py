@@ -8,6 +8,7 @@ import models
 import config
 import gffProcessor
 import sqlA_insert as insert
+import vcf_parse
 
 ###############################
 #           Main              #
@@ -20,3 +21,5 @@ if __name__ == "__main__":
 	gffProcessor.main(config.GFF, config.CHROMOSOMES)
 	print "Load the interaction network into database\n"
 	insert.main()
+	print "Populate the VCF tables"
+	vcf_parse.main()
