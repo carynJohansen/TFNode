@@ -46,7 +46,7 @@ def VCF_INFO_to_DF(vcf_reader):
 		vcf_arr.append(row)
 
 	numOfRows = len(vcf_arr)
-	vcf_df = pd.DataFrame(index=np.arange(1, numOfRows+1), columns=('CHROM', 'POS', 'ID',
+	vcf_df = pd.DataFrame(index=np.arange(1, numOfRows+1), columns=('CHROM', 'POS', 'ID_type',
 		'REF', 'ALT', 'QUAL', 'FILTER', 'FORMAT'))
 
 	for i in np.arange(1, numOfRows+1):

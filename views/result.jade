@@ -4,6 +4,7 @@ html
     link(rel='stylesheet', href='/style.css')
   body
     h1 List of target genes for regulator #{gene}
+    hi #{plots}
     table
       thead
         tr.head
@@ -18,5 +19,6 @@ html
             td #{result.interaction_id}
             td #{result.gmID}
             td #{result.target_id}
-    br
-    img(src=plot)
+
+  br
+  | <img src="images/LOC_Os01g01840_032_000.png" />
