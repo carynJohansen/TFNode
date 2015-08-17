@@ -1,6 +1,12 @@
-h1 {
-	font-family: Georgia, "Times New Roman";
+h1, h2, h3 {
+	font-family: "Trebuchet MS", Tahoma, Sans-serif;
 	color: black;
+	font-weight: bold;
+}
+div {
+	overflow: scroll;
+	width: 500px;
+	height: 500px;
 }
 table {
 	border:1px solid #999;
