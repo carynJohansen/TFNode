@@ -50,14 +50,12 @@ def pop_interNetwork():
 	#populate the interaction_network table
 	data.to_sql(con=connect, name='interaction_network', if_exists='replace', index=False)
 
-
 def pop_interStats():
 	sql_st = '''SELECT tmp.id as interaction_id, tmp.betasignsum as beta_sign_sum,\
 		tmp.betanonzero as beta_non_zero, tmp.betamedian as beta_median,\
 		tmp.varexpmedian as exp_var_median, tmp.varexpranksum as var_exp_ranksum\
 		FROM interaction_network_tmp as tmp'''
 	data = sql.read_sql(sql_st, con=engine)
-	#print data.shape
 
 	#populate the interaction_stats table using pandas.to_sql and the SQLAlchemy engine
 	data.to_sql(con=engine, name='interaction_stats', if_exists='replace', index=False)
