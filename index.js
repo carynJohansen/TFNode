@@ -38,9 +38,13 @@ app.post('/query', function (request, response, next) {
 	function showRegulator(results, gene) {
 		//here, gene is a string and results is an array of JSON objects (it itself is an object)
 		var images = geneImages()
+		var im_path = []
+		for ( i = 0 ; i < images.length; i ++) {
+			im_path[i] = images[i].replace('static/', '')
+		}
 		console.log("this is images: " + images)
 		console.log(typeof images[0] == 'string')
-		response.render('result', { gene: gene, data : results, plots : images })
+		response.render('result', { gene: gene, data : results, plots : im_path })
 	} //close showRegulator
 
 	function queryByRegulator(whenDone) {
@@ -68,7 +72,7 @@ app.post('/query', function (request, response, next) {
 
 	function geneImages() {
 		//return an array of files associated with the searched for gene
-		file_pattern = 'LOC_Os01g01840_032_000.png' 
+		file_pattern = request.body.gene_locus 
 		fs.exists('static/images/LOC_Os01g01840_032_000.png', function (exists) {
 			util.debug(exists ? "it's there" : "nope, no image")
 		})

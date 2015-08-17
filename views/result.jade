@@ -14,11 +14,14 @@ html
           th Target ID
       tbody
         each result in data
+          - var hlink = result.target_locus
           tr
-            td #{result.target_locus}
+            td 
+              a(href="http://rice.plantbiology.msu.edu/cgi-bin/gbrowse/rice/?name=" + result.target_locus) #{result.target_locus}
             td #{result.interaction_id}
             td #{result.gmID}
             td #{result.target_id}
 
   br
-  | <img src="images/LOC_Os01g01840_032_000.png" />
+  each plt in plots
+    | <img src=#{plt} />
