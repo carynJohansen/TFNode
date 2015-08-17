@@ -7,7 +7,8 @@ var path = require('path')
 var bodyParser = require('body-parser')
 var fs = require('fs')
 var jade = require('jade')
-var Glob = require('glob')
+var globule = require('globule')
+var util = require('util')
 
 //Database connection
 var sqlite3 = require('sqlite3').verbose()
@@ -37,8 +38,13 @@ app.post('/query', function (request, response, next) {
 	function showRegulator(results, gene) {
 		//here, gene is a string and results is an array of JSON objects (it itself is an object)
 		var images = geneImages()
+		var im_path = []
+		for ( i = 0 ; i < images.length; i ++) {
+			im_path[i] = images[i].replace('static/', '')
+		}
 		console.log("this is images: " + images)
-		response.render('result', { gene: gene, data : results, plots : images })
+		console.log(typeof images[0] == 'string')
+		response.render('result', { gene: gene, data : results, plots : im_path })
 	} //close showRegulator
 
 	function queryByRegulator(whenDone) {
@@ -66,20 +72,17 @@ app.post('/query', function (request, response, next) {
 
 	function geneImages() {
 		//return an array of files associated with the searched for gene
-		gpattern = request.body.gene_locus
-		console.log("In geneImages(). here's the gene: " + gpattern)
-		Glob("/static/images/[reqGL]", function(err, files) { 
-			if (err) {
-				console.log(err)
-			} else {
-				console.log("files: " + files)
-			}
-		}) //close glob
-		console.log("after")
+		file_pattern = request.body.gene_locus 
+		fs.exists('static/images/LOC_Os01g01840_032_000.png', function (exists) {
+			util.debug(exists ? "it's there" : "nope, no image")
+		})
+		console.log("In geneImages(). here's the gene: " + file_pattern)
+		var plot_files = globule.find("static/images/*" + file_pattern + "*")
+		console.log("here's the paths for the image: " + plot_files)
+		return plot_files
+		//console.log("after globule")
 	}//close geneImages
 
-	var im = geneImages()
-	console.log("var image : " + im)
 	queryByRegulator(showRegulator)
 }) //close app.post
 
