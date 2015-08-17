@@ -1,14 +1,19 @@
+/* headers */
 h1, h2, h3 {
 	font-family: "Trebuchet MS", Tahoma, Sans-serif;
 	color: black;
 	font-weight: bold;
+}
+body {
+	font: 70%/1.5em Verdana, Tahoma, arial, sans-serif;
+	text-align: center;
 }
 div {
 	overflow: scroll;
 	width: 500px;
 	height: 500px;
 }
-table {
+/*table {
 	border:1px solid #999;
 	background-color: white;
 	border-collapse: collapse;
@@ -16,8 +21,50 @@ table {
 td, th {
 	border: 1px solid #999;
 	padding: 0.5rem;
-}
+	text-align: center;
+}*/
 img {
 	width: 100px;
 	height: 100px;
+}
+table {
+	border-collapse: collapse;
+	margin: 10px;	
+	
+}
+th strong {
+	color: #fff;
+}
+th {
+	/*background: #F34577;*/
+	/*background: #24BDB7;*/
+	background: #94b6d2;
+	height: 29px;
+	padding-left: 8px;
+	padding-right: 8px;
+	color: #558bb8;
+	text-align: center;
+	border-left: 1px solid #87ceeb;/*#B6D59A;*/
+
+	border-bottom: solid 2px #FFF;
+}
+tr {
+	height: 30px;
+
+}
+td {
+	padding-left: 8px;
+	padding-right: 8px;
+	border-left: 1px solid #FFF;
+
+	border-bottom: solid 1px #cccccc;
+}
+td.first,th.first {
+	border-left: 0px;
+}
+tr.row-a {
+	background: #F8F8F8;
+}
+tr.row-b {
+	background: #EFEFEF;
 }
