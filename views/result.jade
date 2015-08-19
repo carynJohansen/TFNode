@@ -1,0 +1,27 @@
+html
+  head 
+    title Test3
+    link(rel='stylesheet', href='/style.css')
+  body
+    h1 List of target genes for regulator #{gene}
+    div
+      table
+        thead
+          tr.head
+            th Target Locus
+            th Interaction ID
+            th Gene Model ID
+            th Target ID
+        tbody
+          each result in data
+            - var hlink = result.target_locus
+            tr
+              td 
+                a(href="http://rice.plantbiology.msu.edu/cgi-bin/gbrowse/rice/?name=" + result.target_locus) #{result.target_locus}
+              td #{result.interaction_id}
+              td #{result.gmID}
+              td #{result.target_id}
+
+  br
+  each plt in plots
+    | <img src=#{plt} />

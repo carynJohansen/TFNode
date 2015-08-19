@@ -68,7 +68,7 @@ def gff_to_DF(chromosome, gff):
 	for i in np.arange(1, numberOfRows+1):
 		gff_df.loc[i] = gff_list[i-1]
 
-	print "Whew, done"
+	print "Whew, done\n"
 	return gff_df
 
 def DF_to_sql(gene_model_df):
@@ -76,7 +76,7 @@ def DF_to_sql(gene_model_df):
 	print "populating the DQL"
 	
 	gene_model_df.to_sql(con=connect, name='gene_model', if_exists='replace', index=True, index_label='id') 
-	print "Whew, done"
+	print "Whew, done\n"
 
 def main(gff, chromosomes):
 	#make a list of panda DataFrames for each of the Chromosomes

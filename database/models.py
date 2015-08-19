@@ -69,6 +69,32 @@ class Interaction_Stats(Base):
     def __init__(self, id):
         self.id = id
 
+class VCF_info(Base):
+    """The class for the variant-specific information in the VCF"""
+    __tablename__ = 'vcf_information'
+    id = Column(Integer, primary_key=True)
+    chrom = Column(String)
+    position = Column(Integer)
+    id_type = Column(String)
+    ref = Column(String)
+    alt = Column(String)
+    qual = Column(String)
+    filter = Column(String)
+    format = Column(String)
+
+    def __init__(self, id):
+        self.id = id
+
+class VCF_sample_info(Base):
+    """The class for the sample-specific information stored in a VCF"""
+    __tablename__ = 'vcf_sample_info'
+    id = Column(Integer, primary_key=True)
+    variant_id = Column(Integer, ForeignKey('vcf_information.id'))
+    sample = Column(String)
+    GT = Column(String)
+    #Need to figure out how to do all the other keys for the VCF...
+    vcf_information = relationship(VCF_info)
+
 def database_init():
     Base.metadata.create_all(engine)
 
