@@ -23,4 +23,3 @@ if __name__ == "__main__":
 	insert.main()
 	print "Populate the VCF tables"
 	vcf_parse.main()
-
