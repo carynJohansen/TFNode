@@ -22,4 +22,4 @@ if __name__ == "__main__":
 	print "Load the interaction network into database\n"
 	insert.main()
 	print "Populate the VCF tables"
-	#vcf_parse.main()
+	vcf_parse.main()
