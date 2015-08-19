@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 //- result.jade
 extends ./layout.jade
 
@@ -5,9 +6,15 @@ block title
     title Regulator Query
 
 block content
+=======
+html
+  head 
+    title Test3
+    link(rel='stylesheet', href='/style.css')
+  h1 List of target genes for regulator #{gene}
+>>>>>>> c49cf4e7639950db02b3750b42bfcc32ccf77a7b
   body
-    h1 List of target genes for regulator #{gene}
-    div
+    div()
       table
         thead
           tr.head
