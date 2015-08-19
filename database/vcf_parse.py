@@ -25,6 +25,7 @@ connect = engine.connect().connection
 
 def VCF_INFO_to_DF(vcf_reader):
 	'''The purpose of this is to insert the information for each record of the VCF into a VCF_information table'''
+	print("In VCF_into_to_DF!")
 	#create array to hold information
 	vcf_arr = []
 
@@ -34,8 +35,8 @@ def VCF_INFO_to_DF(vcf_reader):
 		row.append(record.POS)
 		row.append(record.ID)
 		row.append(record.REF)
-		row.append(record.ALT[0])
-
+		row.append(record.ALT[0]) #this is a string
+		print("number of alt base paris: " + str(len(record.ALT)))
 		if record.QUAL != 0:
 			row.append(record.QUAL)
 		else:
@@ -43,18 +44,23 @@ def VCF_INFO_to_DF(vcf_reader):
 
 		row.append(record.FILTER)
 		row.append(record.FORMAT)
+		#print("Row:")
+		#print(row)
 		vcf_arr.append(row)
 
 	numOfRows = len(vcf_arr)
+	print("Number of rows: " + str(numOfRows))
 	vcf_df = pd.DataFrame(index=np.arange(1, numOfRows+1), columns=('CHROM', 'POS', 'ID_type',
 		'REF', 'ALT', 'QUAL', 'FILTER', 'FORMAT'))
 
 	for i in np.arange(1, numOfRows+1):
 		vcf_df.loc[i] = vcf_arr[i-1]
 
+	print("Whew! done. \n")
 	return vcf_df
 
 def VCF_sample_to_DF():
+	print("In VCF_sample_to_DF!")
 	samples_arr = []
 	vcf_reader = vcf.Reader(open(config.VCF, "rb"))
 
@@ -73,15 +79,20 @@ def VCF_sample_to_DF():
 	for i in np.arange(1, numOfRows+1):
 		sample_df.loc[i] = samples_arr[i-1]
 
+	print("Whew! done. \n")
 	return sample_df
 
 def pop_vcf_info(vcf_info_df):
 	"""populate the vcf_info table"""
+	print("In pop_vcf_info")
 	vcf_info_df.to_sql(con=engine, name='vcf_information', if_exists='replace', index=True, index_label='id')
+	print("Whew! done")
 
 def pop_vcf_sample_info(vcf_sample):
 	"""populate the vcf_sample_info table with the sample genotype information"""
+	print("In pop vcf_sample_info")
 	vcf_sample.to_sql(con=connect, name='vcf_sample_info', if_exists='replace', index=False)
+	print("Whew! done.")
 
 def main():
 	"""The main method, carries out all table population processes"""
