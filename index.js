@@ -12,7 +12,7 @@ var util = require('util')
 
 //Database connection
 var sqlite3 = require('sqlite3').verbose()
-var db = new sqlite3.Database('/tmp/michael.db')
+var db = new sqlite3.Database('/Users/carynjohansen/Documents/NYUClasses/Purugganan_Lab/TFInteraction_db/michael.db')
 
 app.set('port', (process.env.PORT || 5000))
 app.set('views', path.join(__dirname, 'views'))
