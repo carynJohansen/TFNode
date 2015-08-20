@@ -3,38 +3,33 @@ extends ./layout.jade
 
 block title
     title Regulator Query
-    link(rel='stylesheet', href='/resultStyle.css')
+    link(rel='stylesheet', href='/first.css')
 
 block content
-  body
-    div(align='center', style='background:#cccccc;')
-      div(style='width:1000px;background:white')
-        div(align='center')
-          h1 #{gene}
-        #contents
-          #result1.result
-            h1.title 1. Targets
-            hr
-            div(style='padding:10px', align='center')
-              h2.description Genes targeted by #{gene}
-              div(style='float:left;height:430px;width:400px')
-                table
-                  thead
-                    tr.head
-                      th Target Locus
-                      th Interaction ID
-                      th Gene Model ID
-                      th Target ID
-                  tbody
-                    each result in data
-                      - var hlink = result.target_locus
-                      tr
-                        td 
-                          a(href="http://rice.plantbiology.msu.edu/cgi-bin/gbrowse/rice/?name=" + result.target_locus) #{result.target_locus}
-                        td #{result.interaction_id}
-                        td #{result.gmID}
-                        td #{result.target_id}
-    div
-      each plt in plots
-        | <img src=#{plt} border="0" width = 200px style="float:left;margin:20px;"/>
-        br
+  div(align='center')
+    h1 #{gene}
+  div
+    h1.title 1. Targets
+    div(style='padding:10px', align='center')
+      h2.description Genes targeted by #{gene}
+      div(style='float:left;height:430px;width:400px')
+        table
+          thead
+            tr.head
+              th Target Locus
+              th Interaction ID
+              th Gene Model ID
+              th Target ID
+          tbody
+            each result in data
+              - var hlink = result.target_locus
+              tr
+                td 
+                  a(href="http://rice.plantbiology.msu.edu/cgi-bin/gbrowse/rice/?name=" + result.target_locus) #{result.target_locus}
+                td #{result.interaction_id}
+                td #{result.gmID}
+                td #{result.target_id}
+  div
+    each plt in plots
+      | <img src=#{plt} border="0" width = 200px style="float:left;margin:20px;"/>
+      br
