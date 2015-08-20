@@ -1,5 +1,5 @@
 #Variables
-DATABASE = '/tmp/michael.db'
+DATABASE = '../../michael.db'
 GFF = '../../data/Chr1.gff3'
 
 NET = '../../data/summary_frac_tp_100_perm_1--frac_fp_0_perm_1_1.1.tsv'
