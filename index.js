@@ -31,7 +31,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
 //})
 
 app.get('/', function (request, response) {
-    response.sendFile(__dirname + '/views/query.html')
+    response.render('query')
 })
 
 app.post('/query', function (request, response, next) {
@@ -44,13 +44,16 @@ app.post('/query', function (request, response, next) {
 		}
 		console.log("this is images: " + images)
 		console.log(typeof images[0] == 'string')
-		response.render('result', { gene: gene, data : results, plots : im_path })
+		response.render('layout', { gene: gene, data : results, plots : im_path })
 	} //close showRegulator
 
+	function showTarget(results, gene) {
+
+	}
+
 	function queryByRegulator(whenDone) {
-		
 		db.serialize( function() {
-			var reqGL = request.body.gene_locus
+			var reqGL = request.body.reg_gene_locus
 			var sql_query = "SELECT gm2.gene_locus as target_locus, \
 			inter.int_id as interaction_id, \
 			gm2.id as gmID, inter.target as target_id \
@@ -58,7 +61,7 @@ app.post('/query', function (request, response, next) {
 			INNER JOIN gene_model as gm1 ON (inter.regulator = gm1.id) \
 			INNER JOIN gene_model as gm2 ON (inter.target=gm2.id) \
 			WHERE (gm1.gene_locus=?)"
-			console.log("Query is: " + reqGL)
+			console.log("Query (regulator) is: " + reqGL)
 
 			db.all(sql_query, reqGL, function(err, rows) {
 				if (err) {
@@ -70,9 +73,29 @@ app.post('/query', function (request, response, next) {
 		}) // close serialize
 	} // close queryByRegulator
 
+	function queryByTarget(whenDone) {
+		db.serialize( function () {
+			var tarGL = request.body.tar_gene_locus
+			var sql_query = "SELECT gm2.gene_locus as regulator_locus \
+			FROM interaction_network as inter \
+			INNER JOIN gene_model as gm1 ON (inter.target = gm1.id) \
+			INNER JOIN gene_model as gm2 ON (inter.regulator = gm2.id) \
+			where (gm1.gene_locus=?)"
+			console.log("Query (target) is: " + tarGL)
+
+			db.all(sql_query, tarGL, function(err, rows) {
+				if (err) {
+					console.log(err) 
+				} else {
+					whenDone(rows, tarGL)
+				} //close ifelse
+			}) //close db.all
+		}) //close db.serialize
+	} //close queryByTarget
+
 	function geneImages() {
 		//return an array of files associated with the searched for gene
-		file_pattern = request.body.gene_locus 
+		file_pattern = request.body.reg_gene_locus 
 		fs.exists('static/images/LOC_Os01g01840_032_000.png', function (exists) {
 			util.debug(exists ? "it's there" : "nope, no image")
 		})

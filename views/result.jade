@@ -4,7 +4,7 @@ html
     link(rel='stylesheet', href='/style.css')
   h1 List of target genes for regulator #{gene}
   body
-    div()
+    div(style:"float:left")
       table
         thead
           tr.head
@@ -21,7 +21,7 @@ html
               td #{result.interaction_id}
               td #{result.gmID}
               td #{result.target_id}
-
-  br
-  each plt in plots
-    | <img src=#{plt} />
+    div(style:"float:left")
+      each plt in plots
+        | <img src=#{plt} />
+        br
