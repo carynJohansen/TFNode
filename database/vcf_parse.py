@@ -1,7 +1,6 @@
 ###############################
 #           Env               #
 
-from BCBio import GFF
 from sqlalchemy import create_engine
 from pandas.io import sql
 import numpy as np
@@ -27,7 +26,7 @@ def VCF_INFO_to_DF(vcf_reader):
 	'''The purpose of this is to insert the information for each record of the VCF into a VCF_information table'''
 	#create array to hold information
 	vcf_arr = []
-
+	print("In VCF_info_to_DF")
 	for record in vcf_reader:
 		row = []
 		row.append(record.CHROM)
@@ -35,7 +34,8 @@ def VCF_INFO_to_DF(vcf_reader):
 		row.append(record.ID)
 		row.append(record.REF)
 		row.append(record.ALT[0])
-
+		#print("number of alt base pairs is: " + str(len(record.ALT)))
+		#print("record.ALT: " + str(record.ALT))
 		if record.QUAL != 0:
 			row.append(record.QUAL)
 		else:
@@ -51,10 +51,11 @@ def VCF_INFO_to_DF(vcf_reader):
 
 	for i in np.arange(1, numOfRows+1):
 		vcf_df.loc[i] = vcf_arr[i-1]
-
+	print("Whew! done.\n")
 	return vcf_df
 
 def VCF_sample_to_DF():
+	print("In VCF_sample_to_DF")
 	samples_arr = []
 	vcf_reader = vcf.Reader(open(config.VCF, "rb"))
 
@@ -67,28 +68,32 @@ def VCF_sample_to_DF():
 		samples_arr.append(row)
 
 	numOfRows = len(samples_arr)
-
+	print("\nnumOfRows: " + str(numOfRows) + "\n")
 	sample_df = pd.DataFrame(index=np.arange(1, numOfRows+1), columns=('Sample', 'GT'))
 
 	for i in np.arange(1, numOfRows+1):
 		sample_df.loc[i] = samples_arr[i-1]
-
+	print("Whew! done.\n")
 	return sample_df
 
 def pop_vcf_info(vcf_info_df):
 	"""populate the vcf_info table"""
+	print("In pop_vcf_info")
 	vcf_info_df.to_sql(con=engine, name='vcf_information', if_exists='replace', index=True, index_label='id')
+	print("Whew! done. \n")
 
 def pop_vcf_sample_info(vcf_sample):
 	"""populate the vcf_sample_info table with the sample genotype information"""
+	print("pop_vcf_sample_info")
 	vcf_sample.to_sql(con=connect, name='vcf_sample_info', if_exists='replace', index=False)
+	print("Whew! done. \n")
 
 def main():
 	"""The main method, carries out all table population processes"""
 	#open VCF with vcf.Reader
 	vcf_reader = vcf.Reader(open(config.VCF, "rb"))
 	vcf_info = VCF_INFO_to_DF(vcf_reader)
-	print vcf_info
+	#print vcf_info
 	pop_vcf_info(vcf_info)
 
 ###############################
@@ -102,11 +107,14 @@ if __name__ == '__main__':
 	vcf_info = VCF_INFO_to_DF(vcf_reader)
 	sample = VCF_sample_to_DF()
 
-	print vcf_info
+	print("shape of VCF_INFO dataframe:")
 	print sample.shape
-
-	pop_vcf_info(vcf_info)
-	pop_vcf_sample_info(sample)
+	print("\nVCF_Info:\n")
+	print vcf_info
+	print("\nVCF_Sample df:\n")
+	print sample
+	#pop_vcf_info(vcf_info)
+	#pop_vcf_sample_info(sample)
 
 	print("--- %s seconds ---" % (time.time() - start))
 		
