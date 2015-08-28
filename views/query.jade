@@ -1,0 +1,15 @@
+html
+  head
+    title Purugganan Database
+    link(rel='stylesheet' href='/home.css')
+  body
+    h2 Find targets for a regulator:
+    hr
+    form(action='/query', method='POST', name='regulatorQuery')
+      input(type='text', name='reg_gene_locus')
+      input(type='submit', value='Submit Query')
+    hr
+    h2 Find regulators for target genes:
+    form(action='/query', method='PST', name='targetQuery')
+      input(type='text', name='tar_gene_locus')
+      input(type='submit', value='Submit Query')
