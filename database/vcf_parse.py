@@ -1,7 +1,6 @@
 ###############################
 #           Env               #
 
-from BCBio import GFF
 from sqlalchemy import create_engine
 from pandas.io import sql
 import numpy as np
@@ -29,14 +28,14 @@ def VCF_INFO_to_DF():
 	vcf_reader = get_vcf_reader()
 	#create array to hold information
 	vcf_arr = []
-
+	print("In VCF_info_to_DF")
 	for record in vcf_reader:
 		row = []
 		row.append(record.CHROM)
 		row.append(record.POS)
 		row.append(record.ID)
 		row.append(record.REF)
-		row.append(record.ALT[0]) #this is a string
+		row.append(record.ALT[0])
 		if record.QUAL != 0:
 			row.append(record.QUAL)
 		else:
@@ -44,8 +43,6 @@ def VCF_INFO_to_DF():
 
 		row.append(record.FILTER)
 		row.append(record.FORMAT)
-		#print("Row:")
-		#print(row)
 		vcf_arr.append(row)
 
 	numOfRows = len(vcf_arr)
@@ -55,7 +52,6 @@ def VCF_INFO_to_DF():
 
 	for i in np.arange(1, numOfRows+1):
 		vcf_df.loc[i] = vcf_arr[i-1]
-
 	print("Whew! done. \n")
 	return vcf_df
 
@@ -98,8 +94,7 @@ def VCF_sample_to_DF():
 
 	for i in np.arange(1, numOfRows+1):
 		sample_df.loc[i] = samples_arr[i-1]
-
-	print("Whew! done. \n")
+	print("Whew! done.\n")
 	return sample_df
 
 def pop_vcf_info(vcf_info_df):
