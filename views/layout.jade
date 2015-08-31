@@ -1,0 +1,37 @@
+doctype html
+head
+  title Regulator Query
+  link(rel='stylesheet', href='/new.css')
+  
+body
+  #contents
+    #result.result1
+      div(align='center')
+        h1 #{gene}
+      div(style='float:left')
+        h1.title Targets
+        hr
+        div(style='padding:10px; float:left', align='left')
+          h2.description Genes targeted by #{gene}
+          div(style='overflow: scroll')
+            table
+              thead
+                tr.head
+                  th Target Locus
+                  th Interaction ID
+                  th Gene Model ID
+                  th Target ID
+              tbody
+                each result in data
+                  tr
+                    td 
+                      a(href="http://rice.plantbiology.msu.edu/cgi-bin/gbrowse/rice/?name=" + result.target_locus) #{result.target_locus}
+                    td #{result.interaction_id}
+                    td #{result.gmID}
+                    td #{result.target_id}
+  div
+    h1.title Expression plots
+    hr
+    each plt in plots
+      | <img src=#{plt} border="0" width = 200px style="float:left;margin:20px;"/>
+      br
