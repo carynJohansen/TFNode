@@ -44,7 +44,7 @@ app.post('/query', function (request, response, next) {
 		}
 		console.log("this is images: " + images)
 		console.log(typeof images[0] == 'string')
-		response.render('result', { gene: gene, data : results, plots : im_path })
+		response.render('layout', { gene: gene, data : results, plots : im_path })
 	} //close showRegulator
 
 	function queryByRegulator(whenDone) {
