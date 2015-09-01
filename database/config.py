@@ -1,4 +1,5 @@
 #Variables
+
 DATABASE = '/scratch/ckj239/michael.db'
 GFF = '../../data/all.gff3'
 
