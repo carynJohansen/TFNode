@@ -1,0 +1,141 @@
+/* Top Elements */
+* { margin: 0; padding: 0; }
+
+body {
+	background: #cccccc;
+	font: 70%/1.5em Verdana, Tahoma, arial, sans-serif;
+	color: #555; 
+	text-align: center;
+}
+/* headers */
+h1, h2, h3 {
+	font-family: "Trebuchet MS", Tahoma, Sans-serif;
+	color: black;
+	font-weight: bold;
+}
+h1 {
+	font-size: 150%;	
+	line-height: 200%;
+}
+h2 {
+	font-size: 120%;
+	color: #88ac0b;
+}
+h3 {
+	font-size: 120%;
+	color: #666666; 
+}
+
+div {
+	overflow: auto;
+	width: 500px;
+	height: 500px;
+	text-align: center;
+}
+
+/* images */
+h1, h2, h3, p {
+	padding: 0px;		
+	margin: 0px;
+}
+ul, ol {
+	margin: 0px 0px;
+	padding: 0 0px;
+}
+ul li {
+	list-style-image: url(bullet.gif);
+}
+
+code {
+  margin: 5px 0;
+  padding: 10px;
+  text-align: left;
+  display: block;
+  overflow: auto;  
+  font: 500 1em/1.5em 'Lucida Console', 'courier new', monospace ;
+  /* white-space: pre; */
+  background: #FAFAFA;
+  border: 1px solid #f2f2f2;  
+}
+acronym {
+  cursor: help;
+  border-bottom: 1px solid #777;
+}
+blockquote {
+	margin: 10px;
+ 	padding: 0 0 0 28px;  
+   border: 1px solid #f2f2f2; 
+  	background: #FAFAFA url(quote.gif) no-repeat 5px 5px;    
+}
+img {
+	width: 400px;
+	height: 400px;
+}
+/* start - table */
+table {
+	border-collapse: collapse;
+	margin: 10px;	
+	
+}
+th strong {
+	color: #fff;
+}
+th {
+	/*background: #F34577;*/
+	background: #24BDB7;
+	/*background: #94b6d2;*/
+	height: 29px;
+	padding-left: 8px;
+	padding-right: 8px;
+	color: #558bb8;
+	text-align: center;
+	border-left: 1px solid #87ceeb;/*#B6D59A;*/
+
+	border-bottom: solid 2px #FFF;
+}
+tr {
+	height: 30px;
+
+}
+td {
+	padding-left: 8px;
+	padding-right: 8px;
+	border-left: 1px solid #FFF;
+
+	border-bottom: solid 1px #cccccc;
+}
+td.first,th.first {
+	border-left: 0px;
+}
+tr.row-a {
+	background: #F8F8F8;
+}
+tr.row-b {
+	background: #EFEFEF;
+}
+.indent-1 {
+	float: left;
+	overflow: auto;
+}
+.indent-1 section {
+	width: 50%; 
+	float: left;
+	overflow: auto;
+}
+.indent-2 {
+	float: right;
+	overflow: auto;
+}
+#contents{ padding: 0px;}
+.result { padding: 0px; }
+.result h1.title{ padding:0px;font-size:14pt; text-align: left; line-height:100%}
+.result h2.description{ color:#585858;font-size:10pt; text-align:left ;}
+.topmenu {float:right;text-align:right;color:#585858;font-weight:bold; }
+.listname{font-weight:bold;}
+/* alignment classes */
+.float-left  { float: left; }
+.float-right { float: right; }
+.align-left  { text-align: left; }
+.align-right { text-align: right; }
+/* display and additional classes */
+.clear { clear: both; }

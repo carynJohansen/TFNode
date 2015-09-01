@@ -1,6 +1,6 @@
 ###############################
 #           Env               #
-
+import sys
 from BCBio import GFF
 from sqlalchemy import create_engine
 from pandas.io import sql
@@ -93,7 +93,8 @@ def main(gff, chromosomes):
 
 if __name__ == '__main__':
 	start_time = time.time()
-
+	print sys.executable
+	print GFF.__file__
 	gff = config.GFF
 	chromosomes = config.CHROMOSOMES
 	
