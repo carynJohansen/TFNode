@@ -1,0 +1,39 @@
+#!/bin/bash
+#PBS -l nodes=1:ppn=12
+#PBS -l walltime=15:00:00
+#PBS -l mem=12GB
+#PBS -N venv_create
+#PBS -M ckj239@nyu.edu
+#PBS -j oe
+
+module purge
+module load virtualenv/12.1.1
+
+#Env variables
+
+VENV=/home/ckj239/TF_Interaction/TFNode/database/venv
+SRCDIR=/home/ckj239/TF_Interaction/TFNode/database/
+RUNDIR=$SCRATCH/interaction_db/venv_test-${PBS_JOBID/.*}
+mkdir $RUNDIR
+
+#Initiate venv
+cd $SRCDIR
+
+source $VENV/bin/activate
+source ~/anaconda/bin/activate $VENV/bin/bcbio/anaconda
+
+#check that the python is sourced properly
+python $SRCDIR/test.py
+
+echo "Create database with models.py"
+python $SRCDIR/models.py > $RUNDIR/models.out
+echo $?
+echo "Load GFF into gene_model table in database with gffProcessor.py"
+python $SRCDIR/gffProcessor.py > $RUNDIR/gffP.out
+echo $?
+echo "Load the interaction network into database with sqlA_insert.py"
+python $SRCDIR/sqlA_insert.py > $RUNDIR/insert.out
+echo $?
+
+deactivate
+echo $?
