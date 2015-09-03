@@ -55,8 +55,9 @@ app.post('/query', function (request, response, next) {
 		db.serialize( function() {
 			var reqGL = request.body.reg_gene_locus
 			var sql_query = "SELECT gm2.gene_locus as target_locus, \
-			inter.int_id as interaction_id, \
-			gm2.id as gmID, inter.target as target_id \
+			gm2.seqid as chromosome, \
+			gm2.start as start, \
+			gm2.end as end \
 			FROM interaction_network as inter \
 			INNER JOIN gene_model as gm1 ON (inter.regulator = gm1.id) \
 			INNER JOIN gene_model as gm2 ON (inter.target=gm2.id) \
