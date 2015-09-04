@@ -53,7 +53,7 @@ def get_record_2(chrom, position):
 def get_record_3(chrom, start, end):
 	vcf_reader = vcf.Reader(open(config.VCF_COMP, "r"))
 	position_record =[]
-	for record in vcf_reader.fetch(chrom, start, end):
+	for record in vcf_reader.fetch(chrom, int(start), int(end)):
 		row = []
 		row.append(record.CHROM)
 		row.append(record.POS)
@@ -70,13 +70,14 @@ def get_samples():
 #            Main             #
 
 if __name__ == '__main__':
-	file, POS, CHROM = argv
-	start = time.time()
+	file, start, end, CHROM = argv
+	#start = time.time()
 	#one = get_record(CHROM, POS)
 	#print one
-	print("just ifs: %s seconds" % (time.time() - start))
-	start = time.time()
+	#print("just ifs: %s seconds" % (time.time() - start))
+	startTime = time.time()
 	#two = get_record_2(CHROM, POS)
-	three = get_record_3(CHROM, 455511, 460716)
+	#three = get_record_3(CHROM, 455511, 460716)
+	three = get_record_3(CHROM, start, end)
 	print three
-	print("two: %s seconds" % (time.time() - start))
+	#print("two: %s seconds" % (time.time() - startTime))

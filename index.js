@@ -9,6 +9,7 @@ var fs = require('fs')
 var jade = require('jade')
 var globule = require('globule')
 var util = require('util')
+var child = require('child_process')
 
 //Database connection
 var sqlite3 = require('sqlite3').verbose()
@@ -35,7 +36,7 @@ app.get('/', function (request, response) {
 })
 
 app.post('/query', function (request, response, next) {
-	function showRegulator(results, gene) {
+	function showRegulator(results, gene, vcf_python_func) {
 		//here, gene is a string and results is an array of JSON objects (it itself is an object)
 		var images = geneImages()
 		var im_path = []
@@ -43,7 +44,8 @@ app.post('/query', function (request, response, next) {
 			im_path[i] = images[i].replace('static/', '')
 		}
 		console.log("this is images: " + images)
-		console.log(typeof images[0] == 'string')
+		console.log(typeof results == 'object') //this is true, results is an object
+		vcf_stuff = vcf_python_func(results)
 		response.render('layout', { gene: gene, data : results, plots : im_path })
 	} //close showRegulator
 
@@ -107,6 +109,9 @@ app.post('/query', function (request, response, next) {
 		//console.log("after globule")
 	}//close geneImages
 
+	function vcf_python() {
+		var python = child.spawn('python',[ __dirname + '/database/vcf_get.py', 455511, 460716, 'Chr2'])
+	}
 	queryByRegulator(showRegulator)
 }) //close app.post
 
