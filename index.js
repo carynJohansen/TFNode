@@ -59,11 +59,10 @@ app.post('/query', function (request, response, next) {
 			var sql_query = "SELECT gm2.gene_locus as target_locus, \
 			gm2.seqid as chromosome, \
 			gm2.start as start, \
-			gm2.end as end, \
-			gm2.in_prior as in_prior
+			gm2.end as end \
 			FROM interaction_network as inter \
 			INNER JOIN gene_model as gm1 ON (inter.regulator = gm1.id) \
-			INNER JOIN gene_model as gm2 ON (inter.target=gm2.id) \
+			INNER JOIN gene_model as gm2 ON (inter.target = gm2.id) \
 			WHERE (gm1.gene_locus=?)"
 			console.log("Query (regulator) is: " + reqGL)
 
