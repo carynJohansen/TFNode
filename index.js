@@ -36,7 +36,7 @@ app.get('/', function (request, response) {
 })
 
 app.post('/query', function (request, response, next) {
-	function showRegulator(results, gene, vcf_python_func) {
+	function showRegulator(results, gene) {
 		//here, gene is a string and results is an array of JSON objects (it itself is an object)
 		var images = geneImages()
 		var im_path = []
@@ -45,7 +45,7 @@ app.post('/query', function (request, response, next) {
 		}
 		console.log("this is images: " + images)
 		console.log(typeof results == 'object') //this is true, results is an object
-		vcf_stuff = vcf_python_func(results)
+		vcf_stuff = vcf_python( )
 		response.render('layout', { gene: gene, data : results, plots : im_path })
 	} //close showRegulator
 
@@ -99,18 +99,22 @@ app.post('/query', function (request, response, next) {
 	function geneImages() {
 		//return an array of files associated with the searched for gene
 		file_pattern = request.body.reg_gene_locus 
-		fs.exists('static/images/LOC_Os01g01840_032_000.png', function (exists) {
-			util.debug(exists ? "it's there" : "nope, no image")
-		})
+		//fs.exists('static/images/LOC_Os01g01840_032_000.png', function (exists) {
+		//	util.debug(exists ? "it's there" : "nope, no image")
+		//})
 		console.log("In geneImages(). here's the gene: " + file_pattern)
 		var plot_files = globule.find("static/images/*" + file_pattern + "*")
 		console.log("here's the paths for the image: " + plot_files)
 		return plot_files
-		//console.log("after globule")
 	}//close geneImages
 
 	function vcf_python() {
-		var python = child.spawn('python',[ __dirname + '/database/vcf_get.py', 455511, 460716, 'Chr2'])
+
+		var python = child.spawn('python',[ __dirname + '/database/vcf_get.py', 6512743, 6518792, 'Chr3'])
+		
+		python.stdout.on('data', function(data) {
+			console.log(data)
+		})
 	}
 	queryByRegulator(showRegulator)
 }) //close app.post

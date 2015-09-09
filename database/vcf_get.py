@@ -4,7 +4,7 @@
 from BCBio import GFF
 from sqlalchemy import create_engine
 from pandas.io import sql
-from sys import argv
+import sys
 import numpy as np
 import pandas as pd
 
@@ -27,31 +27,8 @@ connect = engine.connect().connection
 def get_vcf_reader():
 	return vcf.Reader(open(config.VCF_COMP, "r"))
 
-def get_record(chrom, position):
+def get_records(chrom, start, end):
 	vcf_reader = get_vcf_reader()
-	position_record = []
-
-	for record in vcf_reader:
-		if record.CHROM == chrom and record.POS == int(position): 
-			print "TRUE!"
-			position_record = record
-			break
-	return position_record
-
-def get_record_2(chrom, position):
-	vcf_reader = get_vcf_reader()
-	position_record = []
-
-	for record in vcf_reader:
-		while record.CHROM == chrom:
-			if record.POS == position:
-				position_record = record
-				break
-			break
-	return position_record
-
-def get_record_3(chrom, start, end):
-	vcf_reader = vcf.Reader(open(config.VCF_COMP, "r"))
 	position_record =[]
 	for record in vcf_reader.fetch(chrom, int(start), int(end)):
 		row = []
@@ -66,18 +43,18 @@ def get_samples():
 	vcf_reader = get_vcf_reader()
 	return vcf_reader.samples
 
+def main(chrom, start, end):
+	variant_info = get_records(chrom, start, end)
+	return variant_info
+
 ###############################
 #            Main             #
 
 if __name__ == '__main__':
-	file, start, end, CHROM = argv
-	#start = time.time()
-	#one = get_record(CHROM, POS)
-	#print one
-	#print("just ifs: %s seconds" % (time.time() - start))
+	file, start, end, chrom = sys.argv
 	startTime = time.time()
-	#two = get_record_2(CHROM, POS)
-	#three = get_record_3(CHROM, 455511, 460716)
-	three = get_record_3(CHROM, start, end)
-	print three
-	#print("two: %s seconds" % (time.time() - startTime))
+	variant_info = main(chrom, start, end)
+	print variant_info
+	sys.stdout.flush()
+	#print type(variant_info)
+	#print("runtime: %s seconds" % (time.time() - startTime))
