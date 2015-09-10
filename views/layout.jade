@@ -19,6 +19,8 @@ body
               th Chromosome
               th Start
               th End
+              th In Prior
+              th Rank
             tbody
               each result in data
                 tr
@@ -27,6 +29,8 @@ body
                   td #{result.chromosome}
                   td #{result.start}
                   td #{result.end}
+                  td #{result.prior}
+                  td #{result.rank}
       div(align=center)
         h2.description Transcription Factor Activity
         each plt in plots
