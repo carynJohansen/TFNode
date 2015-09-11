@@ -45,11 +45,13 @@ app.post('/query', function (request, response, next) {
 		}
 		console.log("this is images: " + images)
 		console.log(typeof results == 'object') //this is true, results is an object
-		vcf_stuff = vcf_python( )
+
 
 		//get the start and stop coordinates to regulator gene
 		coord = get_regulator_coordinates()
-		
+		console.log(coord)
+		vcf_stuff = vcf_python(coord)
+
 		response.render('layout', { gene: gene, data : results, plots : im_path })
 	} //close showRegulator
 
@@ -115,24 +117,27 @@ app.post('/query', function (request, response, next) {
 	function get_regulator_coordinates() {
 		db.serialize( function () {
 			var regGL = request.body.reg_gene_locus
-			var sql_query = "SELECT gm.start, gm.end \
+			var sql_query = "SELECT gm.start, gm.end, gm.seqid as chrom \
 			FROM gene_model as gm \
 			WHERE (gm.gene_locus = ?)"
 			db.all(sql_query, regGL, function(err, rows) {
-				console.log("In ad.all in get_coordinates()")
+				//console.log("In db.all in get_coordinates()")
 				if (err) {
 					console.log(err)
 				} else {
-					console.log(regGL)
-					console.log(rows)
+					//console.log(regGL)
+					//console.log(rows)
 					return rows
 				}
-			})
-		})
+			})//close db.all
+		})//close db.serialize
 	}
 
-	function vcf_python() {
-
+	function vcf_python(coordinates) {
+		//coordinates is a JSON object with start and stop
+		console.log(coordinates)
+		//var start = json["start"]
+		//var end = coordinates["end"]
 		var python = child.spawn('python',[ __dirname + '/database/vcf_get.py', 6512743, 6518792, 'Chr3'])
 		var chunk = ''
 
