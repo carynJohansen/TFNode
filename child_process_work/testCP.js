@@ -13,7 +13,7 @@ python.stdout.on('data', function (data) {
 	json = json.replace(/\s/g, '')
 	console.log(json)
 	response = JSON.parse(json)
-	//console.log(response)
+	console.log(typeof response == 'string')
 	
 })
 
