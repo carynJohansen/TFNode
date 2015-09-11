@@ -31,13 +31,15 @@ def get_records(chrom, start, end):
 	vcf_reader = get_vcf_reader()
 	position_record =[]
 	for record in vcf_reader.fetch(chrom, int(start), int(end)):
-		row = []
-		row.append(record.CHROM)
-		row.append(record.POS)
-		row.append(record.REF)
-		row.append(record.ALT)
+		row = {
+			"chromosome": record.CHROM,
+			"position": record.POS,
+			"reference": record.REF,
+			"alternate": record.ALT,
+		}
 		position_record.append(row)
 	return position_record
+
 
 def get_samples():
 	vcf_reader = get_vcf_reader()

@@ -111,9 +111,14 @@ app.post('/query', function (request, response, next) {
 	function vcf_python() {
 
 		var python = child.spawn('python',[ __dirname + '/database/vcf_get.py', 6512743, 6518792, 'Chr3'])
-		
+		var chunk = ''
+
 		python.stdout.on('data', function(data) {
-			console.log(data)
+			chunk += data
+			json = JSON.stringify(chunk)
+			json = json.replace(/(\n)/, "")
+			response = JSON.parse(json)
+			console.log(response)
 		})
 	}
 	queryByRegulator(showRegulator)
