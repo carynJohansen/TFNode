@@ -12,6 +12,7 @@ python.stdout.on('data', function (data) {
 	console.log(typeof json == 'string')
 	json = json.replace(/\s/g, '')
 	console.log(json)
+	//parse the string as a json, supposed to return an object, but right now it returns a string
 	response = JSON.parse(json)
 	console.log(typeof response == 'string')
 	

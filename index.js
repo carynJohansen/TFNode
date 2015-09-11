@@ -46,6 +46,10 @@ app.post('/query', function (request, response, next) {
 		console.log("this is images: " + images)
 		console.log(typeof results == 'object') //this is true, results is an object
 		vcf_stuff = vcf_python( )
+
+		//get the start and stop coordinates to regulator gene
+		coord = get_regulator_coordinates()
+		
 		response.render('layout', { gene: gene, data : results, plots : im_path })
 	} //close showRegulator
 
@@ -107,6 +111,25 @@ app.post('/query', function (request, response, next) {
 		console.log("here's the paths for the image: " + plot_files)
 		return plot_files
 	}//close geneImages
+
+	function get_regulator_coordinates() {
+		db.serialize( function () {
+			var regGL = request.body.reg_gene_locus
+			var sql_query = "SELECT gm.start, gm.end \
+			FROM gene_model as gm \
+			WHERE (gm.gene_locus = ?)"
+			db.all(sql_query, regGL, function(err, rows) {
+				console.log("In ad.all in get_coordinates()")
+				if (err) {
+					console.log(err)
+				} else {
+					console.log(regGL)
+					console.log(rows)
+					return rows
+				}
+			})
+		})
+	}
 
 	function vcf_python() {
 
