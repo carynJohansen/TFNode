@@ -19,7 +19,11 @@ function queryByTarget(whenDone) {
 	}) //close db.serialize
 } //close queryByTarget
 
-function get_coordinates() {
+function showTarget(results, gene) {
+
+} //close showTarget
+
+function get_query_coordinates() {
 	db.serialize( function () {
 		var regGL = request.body.reg_gene_locus
 		var sql_query = "SELECT gm.start, gm.end, gm.seqid as chrom \
@@ -45,7 +49,7 @@ function vcf_python(coordinates) {
 	//var end = coordinates["end"]
 	var python = child.spawn('python',[ __dirname + '/database/vcf_get.py', 6512743, 6518792, 'Chr3'])
 	var chunk = ''
-	
+
 	python.stdout.on('data', function(data) {
 		chunk += data
 		json = JSON.stringify(chunk)
