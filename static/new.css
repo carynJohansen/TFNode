@@ -1,0 +1,44 @@
+/* headers */
+h1, h2, h3 {
+	font-family: "Trebuchet MS", Tahoma, Sans-serif;
+	color: black;
+	font-weight: bold;
+}
+img {
+	width: 600px;
+	height: 500px;
+}
+body {
+	margin: 0;
+	padding: 0;
+	text-align: center;
+}
+table {
+	border-collapse: collapse;
+	margin: 0 auto;
+	overflow: auto;
+	width: 75%;
+}
+hr {
+	width: 75%;
+}
+.hoverTable {
+	width:75%;
+	border-collapse:collapse;
+	height: 700px;
+	over
+}
+.hoverTable td{
+	padding:7px;
+	border:black 1px solid;
+}
+.hoverTable tr{
+	background: white;
+}
+.hoverTable tr:hover {
+	background-color: #5cb85c;
+}
+
+#contents{ padding: 0px; width:100%;}
+.result h1.title{ padding:0px;font-size:14pt; text-align: center; line-height:100%}
+.result h2.description{ color:#585858;font-size:10pt; text-align:left ;}
