@@ -53,7 +53,7 @@ app.post('/query', function (request, response, next) {
 		console.log(coord)
 		vcf_stuff = vcf_python(coord)
 
-		response.render('layout', { gene: gene, data : results, plots : im_path })
+		response.render('extend1', { gene: gene, data : results, plots : im_path })
 	} //close showRegulator
 
 	function showTarget(results, gene) {
