@@ -2,3 +2,5 @@ database/*.pyc
 database/vcf/*.pyc
 
 node-modules/
+
+child_process_work/
