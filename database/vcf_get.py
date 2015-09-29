@@ -7,6 +7,7 @@ from pandas.io import sql
 import sys
 import numpy as np
 import pandas as pd
+import json
 
 import config
 import vcf
@@ -31,14 +32,16 @@ def get_records(chrom, start, end):
 	vcf_reader = get_vcf_reader()
 	position_record =[]
 	for record in vcf_reader.fetch(chrom, int(start), int(end)):
+		#print type(record.ALT)
 		row = {
 			"chromosome": record.CHROM,
 			"position": record.POS,
 			"reference": record.REF,
-			"alternate": record.ALT,
+			"alternate": str(record.ALT[0])
 		}
 		position_record.append(row)
-	return position_record
+	positions_json = json.dumps(position_record)
+	return positions_json
 
 
 def get_samples():

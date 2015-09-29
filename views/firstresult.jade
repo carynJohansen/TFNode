@@ -8,6 +8,10 @@ block pageContent
     div(align='center')
       h1 Variation
       hr
+      h2.description VCF
+      each variant in variants
+        #{variant}
+        br
   #result.InteractionNetwork
     div(align=center)
       h1.title Regulatory Interaction Network

@@ -37,7 +37,7 @@ app.get('/', function (request, response) {
 
 app.post('/query', function (request, response, next) {
 
-	function showRegulator(results, gene) {
+	function showRegulator(results, reg_gene) {
 		//here, gene is a string and results is an array of JSON objects (it itself is an object)
 		var images = geneImages()
 		var im_path = []
@@ -49,11 +49,27 @@ app.post('/query', function (request, response, next) {
 
 
 		//get the start and stop coordinates to regulator gene
-		coord = get_regulator_coordinates()
-		console.log(coord)
-		vcf_stuff = vcf_python(coord)
-
-		response.render('firstresult', { gene: gene, data : results, plots : im_path })
+		var rc = get_regulator_coordinates()
+		rc.then(function(rcJSON) {
+			console.log(rcJSON)
+			return vcf_python(rcJSON)
+			//response.json(rcJSON)
+		}).then(function(vcf) {
+			var vcfObj = new Object()
+			try {
+				//vcfObj = JSON.stringify(vcf)
+				vcfObj = JSON.parse(vcf)
+				console.log(vcf)
+			} catch (e) {
+				console.log('oh no error!')
+				console.log(e instanceof SyntaxError)
+				console.log(e.message)
+			}
+			response.render('firstresult', { gene: reg_gene, data : results, plots : im_path, variants: vcfObj })
+		}).catch(function(reason) {
+			console.log(reason)
+		})
+		//response.render('firstresult', { gene: gene, data : results, plots : im_path })
 	} //close showRegulator
 
 	function showTarget(results, gene) {
@@ -74,12 +90,13 @@ app.post('/query', function (request, response, next) {
 			INNER JOIN gene_model as gm2 ON (inter.target = gm2.id) \
 			INNER JOIN interaction_stats as stats ON (stats.interaction_id = inter.int_id) \
 			WHERE (gm1.gene_locus=?)"
-			console.log("Query (regulator) is: " + reqGL)
+			//console.log("Query (regulator) is: " + reqGL)
 
 			db.all(sql_query, reqGL, function(err, rows) {
 				if (err) {
 					console.log(err)
 				} else {
+					console.log(typeof rows == 'object')
 					whenDone(rows, reqGL)
 				} //close ifelse
 			}) //close db.all
@@ -119,40 +136,53 @@ app.post('/query', function (request, response, next) {
 	}//close geneImages
 
 	function get_regulator_coordinates() {
-		db.serialize( function () {
-			var regGL = request.body.reg_gene_locus
-			var sql_query = "SELECT gm.start, gm.end, gm.seqid as chrom \
-			FROM gene_model as gm \
-			WHERE (gm.gene_locus = ?)"
-			db.all(sql_query, regGL, function(err, rows) {
+		return new Promise(function(resolve, reject) {
+			db.serialize( function () {
+				var regGL = request.body.reg_gene_locus
+				var sql_query = "SELECT gm.start, gm.end, gm.seqid as chrom \
+					FROM gene_model as gm \
+					WHERE (gm.gene_locus = ?)"
+				db.all(sql_query, regGL, function(err, rows) {
 				//console.log("In db.all in get_coordinates()")
-				if (err) {
-					console.log(err)
-				} else {
-					//console.log(regGL)
-					//console.log(rows)
-					return rows
-				}
-			})//close db.all
-		})//close db.serialize
-	}
+					if (err) {
+						console.log(err)
+					} else {
+						//console.log(regGL)
+						//console.log(rows[0]["start"])
+						resolve(rows[0])
+					}
+				})//close db.all
+			})//close db.serialize
+		}) //close new promise
+	}//close get_regulator_coordinates
 
-	function vcf_python(coordinates) {
-		//coordinates is a JSON object with start and stop
-		console.log(coordinates)
-		//var start = json["start"]
-		//var end = coordinates["end"]
-		var python = child.spawn('python',[ __dirname + '/database/vcf_get.py', 6512743, 6518792, 'Chr3'])
-		var chunk = ''
+	function vcf_python(coordJSON) {
+		return new Promise(function(resolve, reject) {
+			console.log("in vcf_python")
+			//coordinates is a JSON object with start and stop
+			//console.log(coordinates)
+			var start = coordJSON["start"]
+			var end = coordJSON["end"]
+			var chrom = coordJSON["chrom"]
+			console.log("start: " + start)
+			console.log("end: " + end)
 
-		python.stdout.on('data', function(data) {
-			chunk += data
-			json = JSON.stringify(chunk)
-			json = json.replace(/(\n)/, "")
-			response = JSON.parse(json)
-			console.log(response)
-		})
-	}
+			var python = child.spawn('python',[ __dirname + '/database/vcf_get.py', start, end, chrom])
+			var chunk = ''	
+
+			python.stdout.on('data', function(data) {
+				//sys.print(data.toString())
+				chunk += data
+				console.log("chunk")
+				console.log(chunk)
+				console.log("toString()")
+				console.log(data.toString())
+				//json = JSON.stringify(chunk)
+				resolve(chunk)
+			}) //close stdout.on
+		}) //close new promise
+	} //close vcf_python
+
 	queryByRegulator(showRegulator)
 }) //close app.post
 
