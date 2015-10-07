@@ -180,6 +180,11 @@ app.post('/query', function (request, response, next) {
 				//json = JSON.stringify(chunk)
 				resolve(chunk)
 			}) //close stdout.on
+			//catch python error message:
+			python.stderr.on('data', function (data) {
+				console.log('python stderr: ' + data)
+				response.end('python error! ' + data)
+			})
 		}) //close new promise
 	} //close vcf_python
 
