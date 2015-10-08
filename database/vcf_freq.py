@@ -77,6 +77,27 @@ def combine_arrays(position_array, sample_gt_array):
 	df = pd.DataFrame(sample_gt_array, index=position_array)
 	return df
 
+def allele_count(gtDF):
+	"""split the genotype allele dataframe, count the instances of 0's and 1's
+	for each position"""
+	print type(gtDF)
+	alleles = []
+	for i in gtDF.iterrows():
+		record = []
+		idx = i[0]
+		record.append(idx)
+		print idx
+		for j in i[1]:
+			if (type(j) == 'NoneType'):
+				continue
+			print j
+			print type(j)
+			record.append(j.split('/')[0])
+			record.append(j.split('/')[1])
+		alleles.append(record)
+	return alleles
+
+
 #def main():
 
 
@@ -89,6 +110,8 @@ if __name__ == '__main__':
 	gt_dictionary = get_genotypes(chrom, start, end, samples)
 	position_array = get_position_array(chrom, start, end)
 	full_data = combine_arrays(position_array, gt_dictionary)
-	print full_dataw
+	print full_data
+	alleles = allele_count(full_data)
+	print alleles
 	#print samples
 	sys.stdout.flush()
