@@ -451,7 +451,7 @@ class Reader(object):
 
                 # short circuit the most common
                 if vals == '.' or vals == './.':
-                    sampdat[i] = None
+                    sampdat[i] = './.'
                     continue
 
                 entry_num = samp_fmt._nums[i]
