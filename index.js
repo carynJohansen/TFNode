@@ -60,7 +60,7 @@ app.post('/query', function (request, response, next) {
 				//vcfObj = JSON.stringify(vcf)
 				vcfObj = JSON.parse(vcf)
 				return vcfObj
-				console.log(vcf)
+				//console.log(vcf)
 			} catch (e) {
 				console.log('oh no error!')
 				console.log(e instanceof SyntaxError)
@@ -169,8 +169,8 @@ app.post('/query', function (request, response, next) {
 			var start = coordJSON["start"]
 			var end = coordJSON["end"]
 			var chrom = coordJSON["chrom"]
-			console.log("start: " + start)
-			console.log("end: " + end)
+			//console.log("start: " + start)
+			//console.log("end: " + end)
 
 			var python = child.spawn('python',[ __dirname + '/database/vcf_get.py', start, end, chrom])
 			var chunk = ''	
@@ -178,10 +178,10 @@ app.post('/query', function (request, response, next) {
 			python.stdout.on('data', function(data) {
 				//sys.print(data.toString())
 				chunk += data
-				console.log("chunk")
-				console.log(chunk)
-				console.log("toString()")
-				console.log(data.toString())
+				//console.log("chunk")
+				//console.log(chunk)
+				//console.log("toString()")
+				//console.log(data.toString())
 				//json = JSON.stringify(chunk)
 				resolve(chunk)
 			}) //close stdout.on
