@@ -74,17 +74,18 @@ def samples_to_table():
 
 def VCF_sample_to_DF():
 	print("In VCF_sample_to_DF!")
-	vcf_reader = vcf.Reader(open(config.VCF, "rb"))
-	samples_table = get_samples()
-	samples_table = samples_table.set_index(['sample_names'])
+	vcf_reader = vcf.Reader(open('/Users/carynjohansen/Documents/NYUClasses/Purugganan_Lab/TFInteraction_db/data/original_vcf.vcf', "rb"))
+	#samples_table = get_samples()
+	#samples_table = samples_table.set_index(['sample_names'])
 	samples_arr = []
 
 	for record in vcf_reader:
-		vcf_id = get_vcf_id(record.POS)
+		#vcf_id = get_vcf_id(record.POS)
 		for sample in record.samples:
 			row = []
-			row.append(int(vcf_id.loc[0]))
-			row.append(int(samples_table.loc[sample['name']]))
+			#row.append(int(vcf_id.loc[0]))
+			#row.append(int(samples_table.loc[sample['name']]))
+			row.append(sample['name'])
 			row.append(sample['GT'])
 			samples_arr.append(row)
 		vcf_row_counter += 1
@@ -94,6 +95,7 @@ def VCF_sample_to_DF():
 
 	for i in np.arange(1, numOfRows+1):
 		sample_df.loc[i] = samples_arr[i-1]
+	print sample_df
 	print("Whew! done.\n")
 	return sample_df
 
@@ -114,7 +116,7 @@ def pop_vcf_sample_info(vcf_sample):
 
 def get_samples():
 	sql_stmt = "SELECT * from samples"
-	samples = sql.read_sql(sql_stmt, con=connect)
+	#samples = sql.read_sql(sql_stmt, con=connect)
 	return samples
 
 def get_vcf_id(position):
@@ -123,7 +125,7 @@ def get_vcf_id(position):
 	return vcf
 
 def get_vcf_reader():
-	return vcf.Reader(open(config.VCF, "rb"))
+	return vcf.Reader(open('/Users/carynjohansen/Documents/NYUClasses/Purugganan_Lab/TFInteraction_db/data/original_vcf.vcf', "rb"))
 
 ###############################
 #            Main             #
@@ -144,15 +146,15 @@ def main():
 if __name__ == '__main__':
 	start = time.time()
 	#open VCF with vcf.Reader
-	vcf_reader = get_vcf_reader()
+	#vcf_reader = get_vcf_reader()
 
-	vcf_info = VCF_INFO_to_DF(vcf_reader)
-	pop_vcf_info(vcf_info)
+	#vcf_info = VCF_INFO_to_DF(vcf_reader)
+	#pop_vcf_info(vcf_info)
 
-	samples_to_table()
+	#samples_to_table()
 
 	sample = VCF_sample_to_DF()
-	pop_vcf_sample_info(sample)
+	#pop_vcf_sample_info(sample)
 
 	print("--- %s seconds ---" % (time.time() - start))
 		

@@ -18,8 +18,8 @@ import time
 ###############################
 #         SQL Engine          #
 
-engine = create_engine('sqlite:///' + config.DATABASE)
-connect = engine.connect().connection
+#engine = create_engine('sqlite:///' + config.DATABASE)
+#connect = engine.connect().connection
 #print engine
 
 ###############################
@@ -42,7 +42,6 @@ def get_records(chrom, start, end):
 		position_record.append(row)
 	positions_json = json.dumps(position_record)
 	return positions_json
-
 
 def get_samples():
 	vcf_reader = get_vcf_reader()
