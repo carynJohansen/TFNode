@@ -52,19 +52,24 @@ app.post('/query', function (request, response, next) {
 		var rc = get_regulator_coordinates()
 		rc.then(function(rcJSON) {
 			console.log(rcJSON)
-			return vcf_python(rcJSON)
+			return vcf_get(rcJSON)
 			//response.json(rcJSON)
 		}).then(function(vcf) {
 			var vcfObj = new Object()
 			try {
 				//vcfObj = JSON.stringify(vcf)
 				vcfObj = JSON.parse(vcf)
+				return vcfObj
 				console.log(vcf)
 			} catch (e) {
 				console.log('oh no error!')
 				console.log(e instanceof SyntaxError)
 				console.log(e.message)
-			}
+			} // close catch
+		}).then(function (vcfObj) {
+			freq = 
+
+		})then(function (vcfObj, freq) {
 			response.render('firstresult', { gene: reg_gene, data : results, plots : im_path, variants: vcfObj })
 		}).catch(function(reason) {
 			console.log(reason)
@@ -156,7 +161,7 @@ app.post('/query', function (request, response, next) {
 		}) //close new promise
 	}//close get_regulator_coordinates
 
-	function vcf_python(coordJSON) {
+	function vcf_get(coordJSON) {
 		return new Promise(function(resolve, reject) {
 			console.log("in vcf_python")
 			//coordinates is a JSON object with start and stop
@@ -187,6 +192,28 @@ app.post('/query', function (request, response, next) {
 			})
 		}) //close new promise
 	} //close vcf_python
+
+	function vcf_allele_freqs(coordJSON) {
+		return new Promise(function (resolve, reject) {
+			var start = coordJSON["start"]
+			var end = coordJSON["end"]
+			var chrom = coordJSON["chrom"]
+
+			var python = child.spawn('python', [__dirname + '/database/vcf_freq.py', chrom, start, end])
+			var chunk = ''
+
+			python.stdout.on('data', function(data) {
+				chunk += data
+				console.log(chunk)
+				resolve(chunk)
+			}) // close std out
+			//catch python error message:
+			python.stderr.on('data', function (data) {
+				console.log('python stderr: ' + data)
+				response.end('python error! ' + data)
+			}) //close stderr
+		}) //close promise
+	} //close vcf_allele_frequency function
 
 	queryByRegulator(showRegulator)
 }) //close app.post
