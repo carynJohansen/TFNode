@@ -46,36 +46,51 @@ app.post('/query', function (request, response, next) {
 		}
 		console.log("this is images: " + images)
 		console.log(typeof results == 'object') //this is true, results is an object
-
-
 		//get the start and stop coordinates to regulator gene
 		var rc = get_regulator_coordinates()
-		rc.then(function(rcJSON) {
-			console.log(rcJSON)
-			return vcf_get(rcJSON)
-			//response.json(rcJSON)
-		}).then(function(vcf) {
+		console.log(typeof rc == 'object')
+		rc.then(function (rcJSON) {
+			console.log(typeof rc == 'object')
+			return vcf = vcf_get(rcJSON)
+		}).then(function (vcf) {
+			console.log(rc)
 			var vcfObj = new Object()
 			try {
 				//vcfObj = JSON.stringify(vcf)
 				vcfObj = JSON.parse(vcf)
-				return vcfObj
 				//console.log(vcf)
 			} catch (e) {
 				console.log('oh no error!')
 				console.log(e instanceof SyntaxError)
 				console.log(e.message)
-			} // close catch
-		}).then(function (vcfObj) {
-			freq = 
-
-		})then(function (vcfObj, freq) {
+			}
 			response.render('firstresult', { gene: reg_gene, data : results, plots : im_path, variants: vcfObj })
 		}).catch(function(reason) {
 			console.log(reason)
-		})
+		}) //close catch and promise chain
+	} // close showRegulator
+
+
+
+//		all([vcf_get(), vcf_allele_freqs()])
+//			.then(function (lots) {
+//				var vcfObj = new Object()
+//				try {
+//				//vcfObj = JSON.stringify(vcf)
+//				vcfObj = JSON.parse(lots[0])
+//				//console.log(vcf)
+//				} catch (e) {
+//					console.log('oh no error!')
+//					console.log(e instanceof SyntaxError)
+//					console.log(e.message)
+//				} // close catch
+//				response.render('firstresult', { gene: reg_gene, data : results, plots : im_path, variants: vcfObj, allele_counts : lots[1] })
+//			}).catch(function(reason) {
+//				console.log(reason)
+//			})
+		
 		//response.render('firstresult', { gene: gene, data : results, plots : im_path })
-	} //close showRegulator
+	
 
 	function showTarget(results, gene) {
 
@@ -169,10 +184,11 @@ app.post('/query', function (request, response, next) {
 			var start = coordJSON["start"]
 			var end = coordJSON["end"]
 			var chrom = coordJSON["chrom"]
-			//console.log("start: " + start)
-			//console.log("end: " + end)
+			console.log("start: " + start)
+			console.log("end: " + end)
+			console.log("chr: " + chrom)
 
-			var python = child.spawn('python',[ __dirname + '/database/vcf_get.py', start, end, chrom])
+			var python = child.spawn('python',[ __dirname + '/database/vcf_get.py', chrom, start, end])
 			var chunk = ''	
 
 			python.stdout.on('data', function(data) {
@@ -199,7 +215,7 @@ app.post('/query', function (request, response, next) {
 			var end = coordJSON["end"]
 			var chrom = coordJSON["chrom"]
 
-			var python = child.spawn('python', [__dirname + '/database/vcf_freq.py', chrom, start, end])
+			var python = child.spawn('python', [__dirname + '/database/vcf_allele_freq.py', chrom, start, end])
 			var chunk = ''
 
 			python.stdout.on('data', function(data) {
@@ -208,7 +224,7 @@ app.post('/query', function (request, response, next) {
 				resolve(chunk)
 			}) // close std out
 			//catch python error message:
-			python.stderr.on('data', function (data) {
+			python.stderr.on('data', function(data) {
 				console.log('python stderr: ' + data)
 				response.end('python error! ' + data)
 			}) //close stderr
