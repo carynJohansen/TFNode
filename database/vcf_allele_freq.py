@@ -9,7 +9,7 @@ import numpy as np
 import pandas as pd
 import json
 
-#import config
+import config
 import vcf
 
 #to time the program:
@@ -18,8 +18,8 @@ import time
 ###############################
 #         SQL Engine          #
 
-#engine = create_engine('sqlite:///' + config.DATABASE)
-#connect = engine.connect().connection
+engine = create_engine('sqlite:///' + config.DATABASE)
+connect = engine.connect().connection
 #print engine
 
 ###############################
@@ -27,6 +27,13 @@ import time
 
 def get_vcf_reader():
 	return vcf.Reader(open('/Users/carynjohansen/Documents/NYUClasses/Purugganan_Lab/TFInteraction_db/data/rice_chr2_3.vcf.gz', 'r'))
+
+def get_coordinates(locus):
+	#print con
+	sql_query = "SELECT gene_model.start, gene_model.end, gene_model.seqid as chrom \
+		FROM gene_model WHERE (gene_model.gene_locus = '%s')" % locus
+	coords = sql.read_sql(sql_query, con=engine)
+	return coords
 
 def get_samples():
 	"""create and return an array of sample names from the vcf"""
@@ -41,7 +48,6 @@ def get_samples():
 def get_genotypes(chrom, start, end, sampleArray):
 	"""get the genotypes for each position for each sample"""
 	vcf_reader = get_vcf_reader()
-
 	gt_dict = {}
 	for i in sampleArray:
 		gt = []
@@ -130,7 +136,11 @@ def allele_counter(allele_array):
 ###############################
 #            Main             #
 
-def main(chrom, start, end):
+def main(locus):
+	coords = get_coordinates(locus)
+	start = coords["start"][0]
+	end = coords["end"][0]
+	chrom = str(coords["chrom"][0])
 	samples = get_samples()
 	gt_dictionary = get_genotypes(chrom, start, end, samples)
 	position_array = get_position_array(chrom, start, end)
@@ -141,7 +151,7 @@ def main(chrom, start, end):
 	return all_counts
 
 if __name__ == '__main__':
-	file, chrom, start, end = sys.argv
-	all_counts = main(chrom, start, end)
+	file, locus = sys.argv
+	all_counts = main(locus)
 	print all_counts
 	sys.stdout.flush()

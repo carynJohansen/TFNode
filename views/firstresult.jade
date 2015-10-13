@@ -12,12 +12,14 @@ block pageContent
       div(style='overflow:auto;height:300px', 'float: center')
         table.hoverTable
           thead
+            th Chromosome
             th Position
             th Variant Nucleotide
             th Reference
           tbody
             each variant in variants
               tr
+                td #{variant.chromosome}
                 td #{variant.position}
                 td #{variant.alternate}
                 td #{variant.reference}

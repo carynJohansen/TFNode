@@ -9,6 +9,7 @@ import sys
 import numpy as np
 import pandas as pd
 import json
+import sqlite3
 
 import config
 import vcf
@@ -19,20 +20,20 @@ import time
 ###############################
 #         SQL Engine          #
 
-engine = create_engine('sqlite://' + config.DATABASE)
-connect = engine.connect()
-print connect
+engine = create_engine('sqlite:///' + config.DATABASE)
+connect = engine.connect().connection
+#print connect
+#con = sqlite3.connect(config.DATABASE)
 
 ###############################
 #          Methods            #
 
 def get_coordinates(locus):
-	sql_query = "SELECT gm.start, gm.end, gm.seqid as chrom FROM gene_model as gm WHERE (gm.gene_locus = %s)" % locus
-	toresolve = connect.execute(sql_query)
-	coords = DataFrame(toresolve.fetchall())
-	print coords
+	#print con
+	sql_query = "SELECT gene_model.start, gene_model.end, gene_model.seqid as chrom \
+		FROM gene_model WHERE (gene_model.gene_locus = '%s')" % locus
+	coords = sql.read_sql(sql_query, con=engine)
 	return coords
-
 
 def get_vcf_reader():
 	return vcf.Reader(open('/Users/carynjohansen/Documents/NYUClasses/Purugganan_Lab/TFInteraction_db/data/rice_chr2_3.vcf.gz', 'r'))
@@ -50,15 +51,13 @@ def get_samples():
 def get_genotypes(chrom, start, end, sampleArray):
 	"""get the genotypes for each position for each sample"""
 	vcf_reader = get_vcf_reader()
-
 	gt_dict = {}
 	for i in sampleArray:
 		gt = []
-		for record in vcf_reader.fetch(chrom, int(start), int(end)):
+		for record in vcf_reader.fetch(chrom, start=int(start), end=int(end)):
 			for sample in record.samples:
 				if (i == sample.sample):
 					gt.append(sample['GT'])
-					
 		gt_dict[i] = gt
 	#test_answers(chrom, start, end)
 	return gt_dict
@@ -66,6 +65,7 @@ def get_genotypes(chrom, start, end, sampleArray):
 def get_position_array(chrom, start, end):
 	"""return an array of variant positions from vcf between start and end, on chrom."""
 	vcf_reader = get_vcf_reader()
+	#print vcf_reader
 	position_array = []
 	for record in vcf_reader.fetch(chrom, int(start), int(end)):
 		position_array.append(record.POS)
@@ -113,13 +113,17 @@ def gt_counter(gtDF):
 
 def main(locus):
 	coords = get_coordinates(locus)
-
-#	samples = get_samples()
-#	gt_dictionary = get_genotypes(chrom, start, end, samples)
-#	position_array = get_position_array(chrom, start, end)
-#	full_data = combine_arrays(position_array, gt_dictionary)
-#	genotype_counts = gt_counter(full_data)
-#	return genotype_counts
+	#print coords
+	start = coords["start"][0]
+	end = coords["end"][0]
+	chrom = str(coords["chrom"][0])
+	samples = get_samples()
+	gt_dictionary = get_genotypes(chrom, start, end, samples)
+	#print gt_dictionary
+	position_array = get_position_array(chrom, start, end)
+	full_data = combine_arrays(position_array, gt_dictionary)
+	genotype_counts = gt_counter(full_data)
+	return genotype_counts
 
 if __name__ == '__main__':
 	file, locus = sys.argv
