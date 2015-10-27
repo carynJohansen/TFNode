@@ -55,7 +55,7 @@ def main(chrom, start, end):
 #            Main             #
 
 if __name__ == '__main__':
-	file, start, end, chrom = sys.argv
+	file, chrom, start, end = sys.argv
 	startTime = time.time()
 	variant_info = main(chrom, start, end)
 	print variant_info

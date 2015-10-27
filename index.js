@@ -45,8 +45,7 @@ app.post('/query', function (request, response, next) {
 			im_path[i] = images[i].replace('static/', '')
 		}
 		console.log("this is images: " + images)
-		console.log(typeof results == 'object') //this is true, results is an object
-
+		//console.log(typeof results == 'object') //this is true, results is an object
 		var vcf = new Object()
 		var genotypes
 		var alleles
@@ -64,9 +63,30 @@ app.post('/query', function (request, response, next) {
 			response.render('firstresult', { gene: reg_gene, data : results, plots : im_path, variants: vcf, alleleC : alleles, gtC : genotypes })
 		}).catch(function(reason) {
 			console.log(reason)
-		})
+		}) //close catch and promise chain
+	} // close showRegulator
+
+
+
+//		all([vcf_get(), vcf_allele_freqs()])
+//			.then(function (lots) {
+//				var vcfObj = new Object()
+//				try {
+//				//vcfObj = JSON.stringify(vcf)
+//				vcfObj = JSON.parse(lots[0])
+//				//console.log(vcf)
+//				} catch (e) {
+//					console.log('oh no error!')
+//					console.log(e instanceof SyntaxError)
+//					console.log(e.message)
+//				} // close catch
+//				response.render('firstresult', { gene: reg_gene, data : results, plots : im_path, variants: vcfObj, allele_counts : lots[1] })
+//			}).catch(function(reason) {
+//				console.log(reason)
+//			})
+		
 		//response.render('firstresult', { gene: gene, data : results, plots : im_path })
-	} //close showRegulator
+	
 
 	function showTarget(results, gene) {
 
@@ -152,7 +172,7 @@ app.post('/query', function (request, response, next) {
 		}) //close new promise
 	}//close get_regulator_coordinates
 
-	function vcf_python(coordJSON) {
+	function vcf_get(coordJSON) {
 		return new Promise(function(resolve, reject) {
 			//console.log("in vcf_python")
 			//coordinates is a JSON object with start and stop
@@ -160,8 +180,14 @@ app.post('/query', function (request, response, next) {
 			var start = coordJSON["start"]
 			var end = coordJSON["end"]
 			var chrom = coordJSON["chrom"]
+<<<<<<< HEAD
+=======
+			console.log("start: " + start)
+			console.log("end: " + end)
+			console.log("chr: " + chrom)
+>>>>>>> master
 
-			var python = child.spawn('python',[ __dirname + '/database/vcf_get.py', start, end, chrom])
+			var python = child.spawn('python',[ __dirname + '/database/vcf_get.py', chrom, start, end])
 			var chunk = ''	
 
 			python.stdout.on('data', function(data) {
@@ -177,6 +203,7 @@ app.post('/query', function (request, response, next) {
 		}) //close new promise
 	} //close vcf_python
 
+<<<<<<< HEAD
 	function vcf_allele_counts() {
 		return new Promise(function (fulfill, reject) {
 			var gl = request.body.reg_gene_locus
@@ -210,6 +237,29 @@ app.post('/query', function (request, response, next) {
 			}) //close stderr
 		})
 	}
+=======
+	function vcf_allele_freqs(coordJSON) {
+		return new Promise(function (resolve, reject) {
+			var start = coordJSON["start"]
+			var end = coordJSON["end"]
+			var chrom = coordJSON["chrom"]
+
+			var python = child.spawn('python', [__dirname + '/database/vcf_allele_freq.py', chrom, start, end])
+			var chunk = ''
+
+			python.stdout.on('data', function(data) {
+				chunk += data
+				console.log(chunk)
+				resolve(chunk)
+			}) // close std out
+			//catch python error message:
+			python.stderr.on('data', function(data) {
+				console.log('python stderr: ' + data)
+				response.end('python error! ' + data)
+			}) //close stderr
+		}) //close promise
+	} //close vcf_allele_frequency function
+>>>>>>> master
 
 	queryByRegulator(showRegulator)
 }) //close app.post
