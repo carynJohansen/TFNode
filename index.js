@@ -48,31 +48,20 @@ app.post('/query', function (request, response, next) {
 		console.log(typeof results == 'object') //this is true, results is an object
 
 		var vcf = new Object()
+		var genotypes
+		var alleles
 		//get the start and stop coordinates to regulator gene
-		var rc = get_regulator_coordinates()
-		vcf = rc.then(function(rcJSON) {
-			return vcf_python(rcJSON)
-		})
-		var alleles = vcf.then(function() {
-			//console.log(vcf)
+		get_regulator_coordinates().then(function(rcJsonData) {
+			return vcf_python(rcJsonData)
+		}).then(function(vcfData) {
+			vcf = JSON.parse(vcfData)
 			return vcf_allele_counts()
-		})
-		var gt_counts = alleles.then(function() {
-			console.log(alleles)
+		}).then(function(alleleData) {
+			alleles = alleleData
 			return vcf_genotype_counts()
-		}).then(function() {
-			var vcfObj = new Object()
-			try {
-				//vcfObj = JSON.stringify(vcf)
-				console.log(vcf)
-				vcfObj = JSON.parse(vcf)
-				//console.log(vcf)
-			} catch (e) {
-				console.log('oh no error!')
-				console.log(e instanceof SyntaxError)
-				console.log(e.message)
-			}
-			response.render('firstresult', { gene: reg_gene, data : results, plots : im_path, variants: vcfObj })
+		}).then(function(gtData) {
+			genotypes = gtData
+			response.render('firstresult', { gene: reg_gene, data : results, plots : im_path, variants: vcf, alleleC : alleles, gtC : genotypes })
 		}).catch(function(reason) {
 			console.log(reason)
 		})
