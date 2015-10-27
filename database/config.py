@@ -1,6 +1,6 @@
 #Variables
 
-DATABASE = '//Users/carynjohansen/Documents/NYUClasses/Purugganan_Lab/TFInteraction_db/michael.db'
+DATABASE = '/Users/carynjohansen/Documents/NYUClasses/Purugganan_Lab/TFInteraction_db/michael.db'
 GFF = '/Users/carynjohansen/Documents/NYUClasses/Purugganan_Lab/TFInteraction_db/data/all.gff3'
 
 NET = '/Users/carynjohansen/Documents/NYUClasses/Purugganan_Lab/TFInteraction_db/data/summary_frac_tp_100_perm_1--frac_fp_0_perm_1_1.1.tsv'

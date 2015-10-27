@@ -45,26 +45,22 @@ app.post('/query', function (request, response, next) {
 			im_path[i] = images[i].replace('static/', '')
 		}
 		console.log("this is images: " + images)
-		console.log(typeof results == 'object') //this is true, results is an object
+		//console.log(typeof results == 'object') //this is true, results is an object
+		var vcf = new Object()
+		var genotypes
+		var alleles
 		//get the start and stop coordinates to regulator gene
-		var rc = get_regulator_coordinates()
-		console.log(typeof rc == 'object')
-		rc.then(function (rcJSON) {
-			console.log(typeof rc == 'object')
-			return vcf = vcf_get(rcJSON)
-		}).then(function (vcf) {
-			console.log(rc)
-			var vcfObj = new Object()
-			try {
-				//vcfObj = JSON.stringify(vcf)
-				vcfObj = JSON.parse(vcf)
-				//console.log(vcf)
-			} catch (e) {
-				console.log('oh no error!')
-				console.log(e instanceof SyntaxError)
-				console.log(e.message)
-			}
-			response.render('firstresult', { gene: reg_gene, data : results, plots : im_path, variants: vcfObj })
+		get_regulator_coordinates().then(function(rcJsonData) {
+			return vcf_python(rcJsonData)
+		}).then(function(vcfData) {
+			vcf = JSON.parse(vcfData)
+			return vcf_allele_counts()
+		}).then(function(alleleData) {
+			alleles = alleleData
+			return vcf_genotype_counts()
+		}).then(function(gtData) {
+			genotypes = gtData
+			response.render('firstresult', { gene: reg_gene, data : results, plots : im_path, variants: vcf, alleleC : alleles, gtC : genotypes })
 		}).catch(function(reason) {
 			console.log(reason)
 		}) //close catch and promise chain
@@ -116,7 +112,7 @@ app.post('/query', function (request, response, next) {
 				if (err) {
 					console.log(err)
 				} else {
-					console.log(typeof rows == 'object')
+					//console.log(typeof rows == 'object')
 					whenDone(rows, reqGL)
 				} //close ifelse
 			}) //close db.all
@@ -131,7 +127,7 @@ app.post('/query', function (request, response, next) {
 			INNER JOIN gene_model as gm1 ON (inter.target = gm1.id) \
 			INNER JOIN gene_model as gm2 ON (inter.regulator = gm2.id) \
 			where (gm1.gene_locus=?)"
-			console.log("Query (target) is: " + tarGL)
+			//console.log("Query (target) is: " + tarGL)
 
 			db.all(sql_query, tarGL, function(err, rows) {
 				if (err) {
@@ -168,7 +164,7 @@ app.post('/query', function (request, response, next) {
 						console.log(err)
 					} else {
 						//console.log(regGL)
-						//console.log(rows[0]["start"])
+						//console.log(rows[0])
 						resolve(rows[0])
 					}
 				})//close db.all
@@ -178,27 +174,25 @@ app.post('/query', function (request, response, next) {
 
 	function vcf_get(coordJSON) {
 		return new Promise(function(resolve, reject) {
-			console.log("in vcf_python")
+			//console.log("in vcf_python")
 			//coordinates is a JSON object with start and stop
 			//console.log(coordinates)
 			var start = coordJSON["start"]
 			var end = coordJSON["end"]
 			var chrom = coordJSON["chrom"]
+<<<<<<< HEAD
+=======
 			console.log("start: " + start)
 			console.log("end: " + end)
 			console.log("chr: " + chrom)
+>>>>>>> master
 
 			var python = child.spawn('python',[ __dirname + '/database/vcf_get.py', chrom, start, end])
 			var chunk = ''	
 
 			python.stdout.on('data', function(data) {
-				//sys.print(data.toString())
 				chunk += data
-				//console.log("chunk")
 				//console.log(chunk)
-				//console.log("toString()")
-				//console.log(data.toString())
-				//json = JSON.stringify(chunk)
 				resolve(chunk)
 			}) //close stdout.on
 			//catch python error message:
@@ -209,6 +203,41 @@ app.post('/query', function (request, response, next) {
 		}) //close new promise
 	} //close vcf_python
 
+<<<<<<< HEAD
+	function vcf_allele_counts() {
+		return new Promise(function (fulfill, reject) {
+			var gl = request.body.reg_gene_locus
+			var python = child.spawn('python', [ __dirname + '/database/vcf_allele_freq.py', gl])
+			var chunk = ''
+
+			python.stdout.on('data', function (data) {
+				chunk += data
+				fulfill(chunk)
+			}) //close stdout
+			python.stderr.on('data', function (data) {
+				console.log('python err: ' + data)
+				response.end('python error in allele counts!' + data)
+			}) //close stderr
+		})//close promise
+	} //close function
+
+	function vcf_genotype_counts() {
+		return new Promise(function (fulfill, reject) {
+			var gl = request.body.reg_gene_locus
+			var python = child.spawn('python', [ __dirname + '/database/vcf_gt_count.py', gl])
+			var chunk = ''
+
+			python.stdout.on('data', function (data) {
+				chunk += data
+				fulfill(chunk)
+			}) //close stdout
+			python.stderr.on('data', function (data) {
+				console.log('python err: ' + data)
+				response.end('python error in allele counts!' + data)
+			}) //close stderr
+		})
+	}
+=======
 	function vcf_allele_freqs(coordJSON) {
 		return new Promise(function (resolve, reject) {
 			var start = coordJSON["start"]
@@ -230,6 +259,7 @@ app.post('/query', function (request, response, next) {
 			}) //close stderr
 		}) //close promise
 	} //close vcf_allele_frequency function
+>>>>>>> master
 
 	queryByRegulator(showRegulator)
 }) //close app.post
