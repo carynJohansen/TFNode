@@ -24,33 +24,42 @@ block pageContent
                 td #{variant.alternate}
                 td #{variant.reference}
   #result.allele_counts
-    div(align='center')
+    div(align=center)
       h1 Allele Counts
   #result.InteractionNetwork
     div(align=center)
       h1.title Regulatory Interaction Network
       hr
       h2.description Genes targeted by #{gene}
-      div(style='overflow: auto;height:300px', 'float: center')
-        table.hoverTable
-          thead
-            th Target Locus
-            th Chromosome
-            th Start
-            th End
-            th In Prior
-            th Rank
-          tbody
-            each result in data
-              tr
-                td 
-                  a(href="http://rice.plantbiology.msu.edu/cgi-bin/gbrowse/rice/?name=" + result.target_locus) #{result.target_locus}
-                td #{result.chromosome}
-                td #{result.start}
-                td #{result.end}
-                td #{result.prior}
-                td #{result.rank}
-    div(align=center)
-      h2.description Transcription Factor Activity
-      each plt in plots
-        | <img src=#{plt} /> 
+    #info.summary
+      .left
+        h1.title Local Network Summary
+        - var num_of_targets = data.length
+        p Number of targets: 
+        p= num_of_targets
+      .right
+        p stuff
+    hr
+    div(style='overflow:auto;height:300px', 'float: center')
+      table.hoverTable.left
+        thead
+          th Target Locus
+          th Chromosome
+          th Start
+          th End
+          th In Prior
+          th Rank
+        tbody
+          each result in data
+            tr
+              td 
+                a(href="http://rice.plantbiology.msu.edu/cgi-bin/gbrowse/rice/?name=" + result.target_locus) #{result.target_locus}
+              td #{result.chromosome}
+              td #{result.start}
+              td #{result.end}
+              td #{result.prior}
+              td #{result.rank}
+      .right
+        h2.description Transcription Factor Activity
+        each plt in plots
+          | <img src=#{plt} /> 
