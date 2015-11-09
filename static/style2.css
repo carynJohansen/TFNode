@@ -1,0 +1,109 @@
+body {
+	margin: 0;
+	padding: 0;
+	text-align: center;
+	padding-bottom: 100px;
+	background-color: white;
+
+}
+h1, h2, h3 {
+	font-family: "Trebuchet MS", Tahoma, Sans-serif;
+	color: black;
+	font-weight: bold;
+}
+h1.introTitle { 
+	padding:0px;
+	font-size: 20pt;
+	text-align: center;
+	line-height: 100%;
+}
+h3.small {
+	font-size:10pt; 
+}
+h2.descriptive {
+
+}
+div {
+	overflow: auto;
+	background-color: white;
+	margin-bottom: 50px;
+}
+
+img {
+	width: 600px;
+	height: 500px;
+}
+/* summary/intro stuff */
+.intro {
+	width: 100%;
+	padding: 0px;
+}
+
+.left, .right {
+	width: 40%;
+	margin-bottom: 5px;
+}
+.left {
+	float: left;
+	margin-left: 5%;
+	margin-right: 1%;
+	border-width: 1px;
+	border-style: solid;
+	border-color: rbga(0,0,0,0.2);
+}
+.right {
+	float:right;
+	margin-left: 1%;
+	margin-right: 5%;
+	border-width: 1px;
+	border-style: solid;
+	border-color: rbga(0,0,0,0.2);
+}
+/* actual results */
+.contents {
+	padding: 0px;
+	width: 100%;
+	text-align: center;
+	margin-bottom: 5px;
+}
+/* table */
+table {
+	border-collapse: collapse;
+	margin: 0 auto;
+	width: 75%;
+	height: 300px;
+}
+.hoverTable {
+	border-collapse: collapse;
+	height: 300px;
+	overflow: auto;
+}
+.hoverTable td{
+	padding:5px;
+	border:black 1px solid;
+}
+.hoverTable tr{
+	background: white;
+}
+.hoverTable tr:hover {
+	background-color: #5cb85c;
+}
+/* specific to TF activity and interaction networ */
+#TFA, #IntNet {
+	float: left;
+	width: 45%;
+	height: 500px;
+	margin-left: 2.5%;
+	margin-right: 2.5%;
+	overflow: auto;
+}
+
+/* graph! */
+.chart div {
+  font: 10px sans-serif;
+  background-color: steelblue;
+  text-align: right;
+  padding: 3px;
+  margin: 1px;
+  color: white;
+}

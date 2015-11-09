@@ -49,8 +49,11 @@ app.post('/query', function (request, response, next) {
 		var vcf = new Object()
 		var genotypes
 		var alleles
+		var coordinates
 		//get the start and stop coordinates to regulator gene
 		get_regulator_coordinates().then(function(rcJsonData) {
+			console.log(typeof rcJsonData == 'string')
+			coordinates = JSON.parse(JSON.stringify(rcJsonData))
 			return vcf_get(rcJsonData)
 		}).then(function(vcfData) {
 			vcf = JSON.parse(vcfData)
@@ -60,7 +63,8 @@ app.post('/query', function (request, response, next) {
 			return vcf_genotype_counts()
 		}).then(function(gtData) {
 			genotypes = gtData
-			response.render('firstresult', { gene: reg_gene, data : results, plots : im_path, 
+			//console.log(results)
+			response.render('result', { coord: coordinates, gene: reg_gene, data : results, plots : im_path, 
 				variants: vcf, alleleC : alleles, gtC : genotypes })
 		}).catch(function(reason) {
 			console.log(reason)
@@ -79,7 +83,8 @@ app.post('/query', function (request, response, next) {
 			gm2.start as start, \
 			gm2.end as end, \
 			inter.in_prior as prior, \
-			stats.var_exp_ranksum as rank \
+			stats.var_exp_ranksum as ranksum, \
+			stats.exp_var_median as varianceExplained \
 			FROM interaction_network as inter \
 			INNER JOIN gene_model as gm1 ON (inter.regulator = gm1.id) \
 			INNER JOIN gene_model as gm2 ON (inter.target = gm2.id) \
